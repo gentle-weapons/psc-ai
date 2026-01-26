@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Overview
+
+A Next.js-based landing and sign-up page with plans to expand into the full PSC-AI web application.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+You need Node.js installed to run this project locally.
+
+**On Mac:**
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+brew install node
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**On Windows:**
+1. Download the LTS version from https://nodejs.org/
+2. Run the installer and follow the setup wizard
+3. Restart your terminal
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+**Verify installation:**
+```bash
+node --version
+npm --version
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Running the Local Development Server
 
-## Learn More
+1. Install dependencies:
+```bash
+npm install
+```
 
-To learn more about Next.js, take a look at the following resources:
+2. Start the development server:
+```bash
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. Open http://localhost:3000 in your browser
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The page will auto-reload when you make changes to the code.
 
-## Deploy on Vercel
+### Other Useful Commands
+```bash
+npm run build      # Build for production
+npm run start      # Run production build locally
+npm run lint       # Run ESLint to check code quality
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Project Structure
+```
+app/
+├── page.js          # Home page (/)
+├── layout.js        # Root layout (wraps all pages)
+├── globals.css      # Global styles
+└── [route]/
+    └── page.js      # Additional pages (/route)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+public/              # Static files (images, etc.)
+```
+
+## Learning Resources
+
+### React
+- Used for: Building user interfaces and interactive components
+- Official React Docs: https://react.dev/learn
+- React Tutorial: https://react.dev/learn/tutorial-tic-tac-toe
+
+### Next.js
+- Used for: React framework providing routing, server-side rendering, and optimizations
+- Official Next.js Docs: https://nextjs.org/docs
+- Learn Next.js: https://nextjs.org/learn
+- App Router Documentation: https://nextjs.org/docs/app
+
+### Supabase
+- Used for: Authentication, database, and backend services
+- Official Supabase Docs: https://supabase.com/docs
+- Supabase with Next.js: https://supabase.com/docs/guides/getting-started/quickstarts/nextjs
+- Authentication Guide: https://supabase.com/docs/guides/auth
+
+### Vercel
+- Used for: Hosting and deploying Next.js applications
+- Vercel Documentation: https://vercel.com/docs
+- Deploying Next.js: https://nextjs.org/docs/app/building-your-application/deploying
+
+### Tailwind CSS
+- Used for: Styling components with utility-first CSS classes
+- Official Tailwind Docs: https://tailwindcss.com/docs
+- Tailwind with Next.js: https://tailwindcss.com/docs/guides/nextjs
+
+## Future Plans
+
+This repository is structured to eventually support two applications:
+- Landing/sign-up page (current)
+- Main PSC-AI web application (future)
+
+When ready to add the second app, the project can be restructured into a monorepo with both apps in an `apps/` directory.
