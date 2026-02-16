@@ -20,8 +20,12 @@ export default function LandingPage() {
   // Category options displayed in the "Tell us what you need" section
   const categories = ['Pain point', 'Feature idea', 'Use case', 'Other'];
 
-  // Track the entered email for the "Stay in the loop" section
+  // Signup form state
   const [signupEmail, setSignupEmail] = useState('');
+
+  // Feedback form state
+  const [feedback, setFeedback] = useState('');
+  const [feedbackEmail, setFeedbackEmail] = useState('');
 
   // Scroll reveal
   useEffect(() => {
@@ -316,14 +320,28 @@ export default function LandingPage() {
                 <textarea
                   className="suggest-textarea"
                   placeholder="Describe your experience with AI agents today, what's broken, or a feature you'd want to see..."
+                  value={feedback}
+                  onChange={(e) => setFeedback(e.target.value)}
                 />
                 <input
                   className="loop-input"
                   type="email"
                   placeholder="Email (optional — only if you'd like a reply)"
+                  value={feedbackEmail}
+                  onChange={(e) => setFeedbackEmail(e.target.value)}
                 />
-                {/* Similar to the button above, this will also eventually need an onClick attribute to handle database interaction once that is integrated */}
-                <button className="suggest-btn">Submit feedback <ArrowIcon /></button>
+                <button className="suggest-btn" onClick={() => {
+                  // The console.log statements are placeholders to showcase accessing the state variables `selectedCategory`, `feedback`,
+                  // and `feedbackEmail` (if you run the app, and open the console in developer tools, you should see the email and selectedRole printed). 
+                  // Eventually, when the database is being integrated, this is where we would trigger sending data to the database.
+                  // Depending on the result of adding data to the database, we should indicate a succes or error message to the user.
+                  console.log("Category:", selectedCategory);
+                  console.log("Feedback:", feedback);
+                  console.log("Email (optional):", feedbackEmail);
+                }}
+                >
+                  Submit feedback<ArrowIcon />
+                </button>
               </div>
             </div>
           </div>
