@@ -584,19 +584,19 @@ nav {
     border-color: var(--text-dim); 
 }
 
-.role-chip.sel-c { 
+.role-chip.sel-user { 
     background: var(--accent-dim); 
     border-color: rgba(139, 92, 246, 0.35); 
     color: var(--accent); 
 }
 
-.role-chip.sel-d { 
+.role-chip.sel-developer { 
     background: var(--amber-dim); 
     border-color: rgba(245, 166, 35, 0.35); 
     color: var(--amber); 
 }
 
-.role-chip.sel-b { 
+.role-chip.sel-both { 
     background: rgba(139, 92, 246, 0.06); 
     border-color: rgba(139, 92, 246, 0.25); 
     color: var(--text-muted); 

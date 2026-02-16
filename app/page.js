@@ -4,13 +4,24 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 export default function LandingPage() {
-  // In the 'Stay in the loop' section, a user can indicate that
-  // they are either a user/business, a developer/builder, or both.
-  const [selectedRole, setSelectedRole] = useState('sel-c'); // 'sel-c' | 'sel-d' | 'sel-b'
+  // Track selected role for email signup form (`user` | `developer` | `both`)
+  const [selectedRole, setSelectedRole] = useState('user');
 
-  // selectedRole holds the currently selected role chip value, setSelectedRole updates 
-  // it when a different chip is clicked; defaults to 'sel-c' (User / Business).
-  const [selectedCat, setSelectedCat] = useState('Pain point');
+  // Role options displayed in the "Stay in the loop" signup section
+  const roleOptions = [
+    { label: 'User / Business', value: 'user' },
+    { label: 'Developer / Builder', value: 'developer' },
+    { label: 'Both', value: 'both' },
+  ];
+
+  // Track selected category for feedback form (`Pain point` | `Feature idea` | `Use case` | `Other`)
+  const [selectedCategory, setSelectedCategory] = useState('Pain point');
+
+  // Category options displayed in the "Tell us what you need" section
+  const categories = ['Pain point', 'Feature idea', 'Use case', 'Other'];
+
+  // Track the entered email for the "Stay in the loop" section
+  const [signupEmail, setSignupEmail] = useState('');
 
   // Scroll reveal
   useEffect(() => {
@@ -31,17 +42,6 @@ export default function LandingPage() {
       reveals.forEach((el) => observer.unobserve(el));
     };
   }, []);
-
-  // `roleChips` refer to the type of role a user can select when signing up for
-  // update notifications. These options are seen in the 'Stay in the loop' section.
-  const roleChips = [
-    { label: 'User / Business', cls: 'sel-c' },
-    { label: 'Developer / Builder', cls: 'sel-d' },
-    { label: 'Both', cls: 'sel-b' },
-  ];
-
-  // `categories` indicate the category of feedback submitted under the 'Tell us what you need' section.
-  const categories = ['Pain point', 'Feature idea', 'Use case', 'Other'];
 
   return (
     <>
@@ -266,23 +266,29 @@ export default function LandingPage() {
                 Just meaningful progress on what we're building.
               </p>
               <div className="loop-form">
-                <input className="loop-input" type="email" placeholder="your@email.com" />
+                <input className="loop-input" type="email" placeholder="your@email.com" value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)}/>
                 <div>
                   <div className="chip-label">I am a...</div>
                   <div className="loop-role-row">
-                    {roleChips.map(({ label, cls }) => (
-                      <button
-                        key={cls}
-                        className={`role-chip ${selectedRole === cls ? cls : ''}`}
-                        onClick={() => setSelectedRole(cls)}
-                      >
+                    {roleOptions.map(({ label, value }) => (
+                      <button key={value} className={`role-chip ${selectedRole === value ? `sel-${value}` : ''}`} onClick={() => setSelectedRole(value)}>
                         {label}
                       </button>
                     ))}
                   </div>
                 </div>
-                {/* This button will eventually need an onClick attribute to handle database interaction once that is integrated */}
-                <button className="loop-btn">Notify me <ArrowIcon /></button>
+                <button className="loop-btn" 
+                  onClick={() => {
+                    // The console.log statements are placeholders to showcase accessing the state variables `email` and `selectedRole`
+                    // (if you run the app, and open the console in developer tools, you should see the email and selectedRole printed). 
+                    // Eventually, when the database is being integrated, this is where we would trigger sending data to the database.
+                    // Depending on the result of adding data to the database, we should indicate a succes or error message to the user.
+                    console.log("Email:", signupEmail);
+                    console.log("Role:", selectedRole);
+                    }}
+                >
+                  Notify me<ArrowIcon />
+                </button>
                 <div className="loop-note">No account needed. Unsubscribe any time.</div>
               </div>
             </div>
@@ -301,11 +307,7 @@ export default function LandingPage() {
                   <div className="chip-label">Category</div>
                   <div className="suggest-category">
                     {categories.map((cat) => (
-                      <button
-                        key={cat}
-                        className={`cat-chip ${selectedCat === cat ? 'sel' : ''}`}
-                        onClick={() => setSelectedCat(cat)}
-                      >
+                      <button key={cat} className={`cat-chip ${selectedCategory === cat ? 'sel' : ''}`} onClick={() => setSelectedCategory(cat)}>
                         {cat}
                       </button>
                     ))}
