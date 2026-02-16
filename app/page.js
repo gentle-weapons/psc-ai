@@ -12,10 +12,10 @@ export default function LandingPage() {
   // it when a different chip is clicked; defaults to 'sel-c' (User / Business).
   const [selectedCat, setSelectedCat] = useState('Pain point');
 
-  // Scroll reveal + nav highlight (highlights what section you are at in the navigation bar)
+  // Scroll reveal
   useEffect(() => {
-    // Scroll reveal
     const reveals = document.querySelectorAll('.reveal');
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
@@ -24,30 +24,15 @@ export default function LandingPage() {
       },
       { threshold: 0.08 }
     );
-    reveals.forEach((el) => observer.observe(el));
 
-    // Nav scroll highlight
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('nav .nav-link');
-    const handleScroll = () => {
-      let current = '';
-      sections.forEach((s) => {
-        if (window.scrollY >= s.offsetTop - 120) current = s.id;
-      });
-      navLinks.forEach((l) => {
-        l.style.color =
-          l.getAttribute('href') === '#' + current ? 'var(--text)' : '';
-      });
-    };
-    window.addEventListener('scroll', handleScroll);
+    reveals.forEach((el) => observer.observe(el));
 
     return () => {
       reveals.forEach((el) => observer.unobserve(el));
-      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
-  // `roleChips` indicate the type of role a user can select when signing up for
+  // `roleChips` refer to the type of role a user can select when signing up for
   // update notifications. These options are seen in the 'Stay in the loop' section.
   const roleChips = [
     { label: 'User / Business', cls: 'sel-c' },
@@ -55,8 +40,7 @@ export default function LandingPage() {
     { label: 'Both', cls: 'sel-b' },
   ];
 
-  // `categories` indicate the category of feedback submitted under the
-  // 'Tell us what you need' section.
+  // `categories` indicate the category of feedback submitted under the 'Tell us what you need' section.
   const categories = ['Pain point', 'Feature idea', 'Use case', 'Other'];
 
   return (
@@ -98,20 +82,23 @@ export default function LandingPage() {
         <div className="container">
           <div className="frameworks-label">Built with popular agent frameworks in mind</div>
           <div className="framework-pills">
-            {[
-              { name: 'LangChain', color: '#1AA260' },
-              { name: 'LangGraph', color: '#FF7A00' },
-              { name: 'CrewAI', color: '#7C3AED' },
-              { name: 'AutoGen', color: '#0EA5E9' },
-              { name: 'OpenAI Swarm', color: '#F59E0B' },
-              { name: 'LlamaIndex', color: '#EC4899' },
-            ].map((f) => (
-              <div key={f.name} className="framework-pill">
-                <div className="fp-dot" style={{ background: f.color }} />
-                {f.name}
-              </div>
-            ))}
-            <div className="framework-pill" style={{ borderStyle: 'dashed', opacity: 0.5 }}>
+            <div className="framework-pill">
+              <div className="fp-dot" style={{ background: '#1AA260' }} />LangChain
+            </div>
+
+            <div className="framework-pill">
+              <div className="fp-dot" style={{ background: '#7C3AED' }} />CrewAI
+            </div>
+
+            <div className="framework-pill">
+              <div className="fp-dot" style={{ background: '#0EA5E9' }} />AutoGen
+            </div>
+
+            <div className="framework-pill">
+              <div className="fp-dot" style={{ background: '#F59E0B' }} />OpenAI Swarm
+            </div>
+
+            <div className="framework-pill" style={{ opacity: 0.5 }}>
               <div className="fp-dot" style={{ background: 'var(--text-dim)' }} />
               More to come
             </div>
@@ -140,21 +127,33 @@ export default function LandingPage() {
               <h3>Your experience<br />shapes the future</h3>
               <p>
                 You use AI agents every day. Your feedback is the most valuable signal
-                a developer can get — and now there&apos;s a structured way to give it.
+                a developer can get — and now there's a structured way to give it.
               </p>
               <ul className="feature-list">
-                {[
-                  'Rate whether the agent completed your task, and how well it did',
-                  'Score your satisfaction with accuracy, speed, and overall behavior',
-                  'Leave free-form feedback describing your experience in your own words',
-                  "Attach the agent's execution trace to give developers full context",
-                  'Browse reviews from others before integrating an agent into your workflow',
-                ].map((text) => (
-                  <li key={text} className="feature-item">
-                    <div className="fi-check c">✓</div>
-                    <div>{text}</div>
-                  </li>
-                ))}
+                <li className="feature-item">
+                  <div className="fi-check c">✓</div>
+                  <div>Rate whether the agent completed your task, and how well it did</div>
+                </li>
+
+                <li className="feature-item">
+                  <div className="fi-check c">✓</div>
+                  <div>Score your satisfaction with accuracy, speed, and overall behavior</div>
+                </li>
+
+                <li className="feature-item">
+                  <div className="fi-check c">✓</div>
+                  <div>Leave free-form feedback describing your experience in your own words</div>
+                </li>
+
+                <li className="feature-item">
+                  <div className="fi-check c">✓</div>
+                  <div>Attach the agent's execution trace to give developers full context</div>
+                </li>
+
+                <li className="feature-item">
+                  <div className="fi-check c">✓</div>
+                  <div>Browse reviews from others before integrating an agent into your workflow</div>
+                </li>
               </ul>
             </div>
 
@@ -165,22 +164,34 @@ export default function LandingPage() {
               </div>
               <h3>Metrics that tell<br />the whole story</h3>
               <p>
-                Surface-level evals aren&apos;t enough. See exactly how your agents run —
+                Surface-level evals aren't enough. See exactly how your agents run —
                 from LLM call costs to tool failures — correlated with real user satisfaction.
               </p>
               <ul className="feature-list">
-                {[
-                  'Track LLM calls, token usage, and cost-per-run across your agent',
-                  'Monitor tool call success rates and pinpoint where agents break down',
-                  'View full execution traces tied to specific user-submitted reviews',
-                  'Framework-specific views: filter by LangChain, LangGraph, CrewAI, and more',
-                  'Connect quantitative performance data directly to human satisfaction scores',
-                ].map((text) => (
-                  <li key={text} className="feature-item">
-                    <div className="fi-check d">✓</div>
-                    <div>{text}</div>
-                  </li>
-                ))}
+                <li className="feature-item">
+                  <div className="fi-check d">✓</div>
+                  <div>Track LLM calls, token usage, and cost-per-run across your agent</div>
+                </li>
+
+                <li className="feature-item">
+                  <div className="fi-check d">✓</div>
+                  <div>Monitor tool call success rates and pinpoint where agents break down</div>
+                </li>
+
+                <li className="feature-item">
+                  <div className="fi-check d">✓</div>
+                  <div>View full execution traces tied to specific user-submitted reviews</div>
+                </li>
+
+                <li className="feature-item">
+                  <div className="fi-check d">✓</div>
+                  <div>Framework-specific views: filter by LangChain, LangGraph, CrewAI, and more</div>
+                </li>
+
+                <li className="feature-item">
+                  <div className="fi-check d">✓</div>
+                  <div>Connect quantitative performance data directly to human satisfaction scores</div>
+                </li>
               </ul>
             </div>
 
@@ -239,7 +250,7 @@ export default function LandingPage() {
             <div className="section-title">Follow the build &amp; help shape the platform</div>
             <p>
               ReviewMyAgent is actively in development. Sign up for occasional progress
-              updates, or share your pain points and ideas — we&apos;re building this with
+              updates, or share your pain points and ideas — we're building this with
               real users in mind.
             </p>
           </div>
@@ -251,8 +262,8 @@ export default function LandingPage() {
               <div className="loop-panel-tag">📬 &nbsp;Get Updates</div>
               <h3>Stay in the loop</h3>
               <p>
-                We&apos;ll send occasional updates as we hit milestones — no spam, no noise.
-                Just meaningful progress on what we&apos;re building.
+                We'll send occasional updates as we hit milestones — no spam, no noise.
+                Just meaningful progress on what we're building.
               </p>
               <div className="loop-form">
                 <input className="loop-input" type="email" placeholder="your@email.com" />
@@ -321,15 +332,8 @@ export default function LandingPage() {
       <footer>
         <div className="container">
           <div className="footer-inner">
-            <Link href="#" className="logo" style={{ fontSize: '17px' }}>
-              <div className="logo-mark" style={{ width: '26px', height: '26px' }}>
-                <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M8 2L14 5.5V10.5L8 14L2 10.5V5.5L8 2Z" stroke="white" strokeWidth="1.5" strokeLinejoin="round" />
-                  <circle cx="8" cy="8" r="2" fill="white" />
-                </svg>
-              </div>
-              ReviewMyAgent
-            </Link>
+            <Link href="#" className="logo" style={{ fontSize: '16px' }}>ReviewMyAgent</Link>
+            <div className="footer-copy">© 2026 ReviewMyAgent</div>
           </div>
         </div>
       </footer>

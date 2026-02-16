@@ -747,6 +747,11 @@ footer {
     justify-content: space-between; 
 }
 
+.footer-copy {
+    font-size: 12px;
+    color: var(--text-dim);
+}
+
 /* Smooth Scroll Reveal */
 .reveal {
   opacity: 0;
