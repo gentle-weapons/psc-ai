@@ -18,7 +18,7 @@ const robotoMono = Roboto_Mono({
 });
 
 export const metadata = {
-  title: 'ReviewMyAgent — AI Agent Evaluation Platform',
+  title: 'ReviewMyAgent',
   description: 'ReviewMyAgent combines real human feedback with hard quantitative data to give you the most complete picture of how an AI agent actually performs.',
 };
 

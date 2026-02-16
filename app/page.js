@@ -12,7 +12,7 @@ export default function LandingPage() {
   // it when a different chip is clicked; defaults to 'sel-c' (User / Business).
   const [selectedCat, setSelectedCat] = useState('Pain point');
 
-  // ── Scroll reveal + nav highlight ───────────────────────────────
+  // Scroll reveal + nav highlight (highlights what section you are at in the navigation bar)
   useEffect(() => {
     // Scroll reveal
     const reveals = document.querySelectorAll('.reveal');
@@ -61,14 +61,13 @@ export default function LandingPage() {
 
   return (
     <>
-      {/* ── NAV ─────────────────────────────────────────────────── */}
+      {/* Navigation Bar */}
       <nav>
         <div className="container">
           <div className="nav-inner">
             <Link href="#" className="logo">ReviewMyAgent</Link>
             <div className="nav-links">
-              <a href="#audiences" className="nav-link">For Users</a>
-              <a href="#developers" className="nav-link">For Developers</a>
+              <a href="#audiences" className="nav-link">Features</a>
               <a href="#how" className="nav-link">How It Works</a>
               <a href="#connect" className="btn-nav">Stay Updated</a>
             </div>
@@ -76,45 +75,35 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* ── HERO ────────────────────────────────────────────────── */}
+      {/* Hero Section */}
       <section className="hero">
         <div className="container">
           <div className="hero-eyebrow">
             <span className="eyebrow-dot"></span>
             In development — follow along
           </div>
-          <h1>
-            Evaluate AI agents<br />the <em>right way</em>
-          </h1>
-          <p className="hero-sub">
-            ReviewMyAgent combines real human feedback with hard quantitative data —
-            giving you the most complete picture of how an AI agent actually performs.
-          </p>
+          <h1>Performance reviews<br />for your <em>AI workforce</em></h1>
+          <p className="hero-sub">ReviewMyAgent combines real human feedback with hard quantitative data, giving you a complete picture of how an AI agent actually performs.</p>
           <div className="hero-actions">
-            <a href="#connect" className="btn-primary">
-              Get updates
-              <ArrowIcon />
-            </a>
-            <a href="#audiences" className="btn-secondary">
-              Learn more
-            </a>
+            <a href="#connect" className="btn-primary">Get updates<ArrowIcon /></a>
+            <a href="#audiences" className="btn-secondary">Learn more</a>
           </div>
         </div>
       </section>
 
       <div className="section-divider" />
 
-      {/* ── FRAMEWORKS ──────────────────────────────────────────── */}
+      {/* Integrated Frameworks */}
       <div className="frameworks">
         <div className="container">
           <div className="frameworks-label">Built with popular agent frameworks in mind</div>
           <div className="framework-pills">
             {[
-              { name: 'LangChain',  color: '#1AA260' },
-              { name: 'LangGraph',  color: '#FF7A00' },
-              { name: 'CrewAI',     color: '#7C3AED' },
-              { name: 'AutoGen',    color: '#0EA5E9' },
-              { name: 'OpenAI Swarm',   color: '#F59E0B' },
+              { name: 'LangChain', color: '#1AA260' },
+              { name: 'LangGraph', color: '#FF7A00' },
+              { name: 'CrewAI', color: '#7C3AED' },
+              { name: 'AutoGen', color: '#0EA5E9' },
+              { name: 'OpenAI Swarm', color: '#F59E0B' },
               { name: 'LlamaIndex', color: '#EC4899' },
             ].map((f) => (
               <div key={f.name} className="framework-pill">
@@ -132,7 +121,7 @@ export default function LandingPage() {
 
       <div className="section-divider" />
 
-      {/* ── AUDIENCE SPLIT ──────────────────────────────────────── */}
+      {/* Consumer vs. Developer Features */}
       <section className="section" id="audiences">
         <div className="container">
           <div className="reveal" style={{ textAlign: 'center', maxWidth: '620px', margin: '0 auto' }}>
@@ -181,7 +170,7 @@ export default function LandingPage() {
               </p>
               <ul className="feature-list">
                 {[
-                  'Track LLM calls, token usage, and cost-per-run across your entire agent',
+                  'Track LLM calls, token usage, and cost-per-run across your agent',
                   'Monitor tool call success rates and pinpoint where agents break down',
                   'View full execution traces tied to specific user-submitted reviews',
                   'Framework-specific views: filter by LangChain, LangGraph, CrewAI, and more',
@@ -201,7 +190,7 @@ export default function LandingPage() {
 
       <div className="section-divider" />
 
-      {/* ── HOW IT WORKS ────────────────────────────────────────── */}
+      {/* How The Platform Works */}
       <section className="section" id="how">
         <div className="container">
           <div className="reveal" style={{ textAlign: 'center', maxWidth: '520px', margin: '0 auto' }}>
@@ -242,7 +231,7 @@ export default function LandingPage() {
 
       <div className="section-divider" />
 
-      {/* ── STAY IN THE LOOP ────────────────────────────────────── */}
+      {/* Stay In The Loop / Provide Feedback */}
       <section className="loop-section" id="connect">
         <div className="container">
           <div className="loop-header reveal">
@@ -257,7 +246,7 @@ export default function LandingPage() {
 
           <div className="loop-grid reveal">
 
-            {/* Updates sign-up */}
+            {/* Sign-up For Updates */}
             <div className="loop-panel">
               <div className="loop-panel-tag">📬 &nbsp;Get Updates</div>
               <h3>Stay in the loop</h3>
@@ -281,12 +270,13 @@ export default function LandingPage() {
                     ))}
                   </div>
                 </div>
+                {/* This button will eventually need an onClick attribute to handle database interaction once that is integrated */}
                 <button className="loop-btn">Notify me <ArrowIcon /></button>
                 <div className="loop-note">No account needed. Unsubscribe any time.</div>
               </div>
             </div>
 
-            {/* Suggestions */}
+            {/* Provide Suggestions */}
             <div className="suggest-panel">
               <div className="loop-panel-tag">💡 &nbsp;Share Feedback</div>
               <h3>Tell us what you need</h3>
@@ -319,15 +309,15 @@ export default function LandingPage() {
                   type="email"
                   placeholder="Email (optional — only if you'd like a reply)"
                 />
+                {/* Similar to the button above, this will also eventually need an onClick attribute to handle database interaction once that is integrated */}
                 <button className="suggest-btn">Submit feedback <ArrowIcon /></button>
               </div>
             </div>
-
           </div>
         </div>
       </section>
 
-      {/* ── FOOTER ──────────────────────────────────────────────── */}
+      {/* Footer */}
       <footer>
         <div className="container">
           <div className="footer-inner">
@@ -340,7 +330,6 @@ export default function LandingPage() {
               </div>
               ReviewMyAgent
             </Link>
-            <div className="footer-copy">© 2025 ReviewMyAgent</div>
           </div>
         </div>
       </footer>
@@ -348,7 +337,7 @@ export default function LandingPage() {
   );
 }
 
-// Small reusable arrow icon
+// Arrow icon
 function ArrowIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
