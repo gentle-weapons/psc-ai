@@ -71,7 +71,7 @@ export default function LandingPage() {
             In development — follow along
           </div>
           <h1>Performance reviews<br />for your <em>AI workforce</em></h1>
-          <p className="hero-sub">ReviewMyAgent combines real human feedback with hard quantitative data, giving you a complete picture of how an AI agent actually performs.</p>
+          <p className="hero-sub">Combining real human feedback with hard quantitative data, ReviewMyAgent gives you a complete picture of how an AI agent actually performs.</p>
           <div className="hero-actions">
             <a href="#connect" className="btn-primary">Get updates<ArrowIcon /></a>
             <a href="#audiences" className="btn-secondary">Learn more</a>
@@ -189,7 +189,7 @@ export default function LandingPage() {
 
                 <li className="feature-item">
                   <div className="fi-check d">✓</div>
-                  <div>Framework-specific views: filter by LangChain, LangGraph, CrewAI, and more</div>
+                  <div>Framework-specific views: filter by LangChain, CrewAI, AutoGen, and more</div>
                 </li>
 
                 <li className="feature-item">
@@ -353,7 +353,7 @@ export default function LandingPage() {
         <div className="container">
           <div className="footer-inner">
             <Link href="#" className="logo" style={{ fontSize: '16px' }}>ReviewMyAgent</Link>
-            <div className="footer-copy">© 2026 ReviewMyAgent</div>
+            <div className="footer-copy">© 2026 Gentle Systems</div>
           </div>
         </div>
       </footer>
