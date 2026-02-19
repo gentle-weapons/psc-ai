@@ -165,7 +165,7 @@ export default function LandingPage() {
       {/* Integrated Frameworks */}
       <div className="frameworks">
         <div className="container">
-          <div className="frameworks-label">Designed for popular agent frameworksß</div>
+          <div className="frameworks-label">Designed for popular agent frameworks</div>
           <div className="framework-pills">
             {/* .map here iterates over the objects in frameworks and creates 'frameworks.length' (4) framework pill elements */}
             {frameworks.map(({name, color}) => (
