@@ -27,6 +27,29 @@ export default function LandingPage() {
   const [feedback, setFeedback] = useState('');
   const [feedbackEmail, setFeedbackEmail] = useState('');
 
+  const consumerFeatures = [
+    "Rate whether the agent completed your task, and how well it did",
+    "Score your satisfaction with accuracy, speed, and overall behavior",
+    "Leave free-form feedback describing your experience in your own words",
+    "Attach the agent's execution trace to give developers full context",
+    "Browse reviews from others before integrating an agent into your workflow"
+  ];
+
+  const developerFeatures = [
+    "Track LLM calls, token usage, and cost-per-run across your agent",
+    "Monitor tool call success rates and pinpoint where agents break down",
+    "View full execution traces tied to specific user-submitted reviews",
+    "Framework-specific views: filter by LangChain, CrewAI, AutoGen, and more",
+    "Connect quantitative performance data directly to human satisfaction scores"
+  ]
+
+  const frameworks = [
+    { name: "LangChain", color: "#1AA260" },
+    { name: "CrewAI", color: "#7C3AED" },
+    { name: "AutoGen", color: "#0EA5E9" },
+    { name: "OpenAI Swarm", color: "#F59E0B" }
+  ]
+
   // Scroll reveal
   useEffect(() => {
     const reveals = document.querySelectorAll('.reveal');
@@ -55,8 +78,7 @@ export default function LandingPage() {
           <div className="nav-inner">
             <Link href="#" className="logo">ReviewMyAgent</Link>
             <div className="nav-links">
-              <a href="#audiences" className="nav-link">Features</a>
-              <a href="#how" className="nav-link">How It Works</a>
+              <a href="#features" className="nav-link">Features</a>
               <a href="#connect" className="btn-nav">Stay Updated</a>
             </div>
           </div>
@@ -82,7 +104,7 @@ export default function LandingPage() {
       <div className="section-divider" />
 
       {/* Consumer vs. Developer Features */}
-      <section className="section" id="audiences">
+      <section className="section" id="features">
         <div className="container">
           <div className="reveal" style={{ textAlign: 'center', maxWidth: '620px', margin: '0 auto' }}>
             <div className="section-eyebrow">Two perspectives, one platform</div>
@@ -103,30 +125,13 @@ export default function LandingPage() {
                 a developer can get — and now there's a structured way to give it.
               </p>
               <ul className="feature-list">
-                <li className="feature-item">
-                  <div className="fi-check c">✓</div>
-                  <div>Rate whether the agent completed your task, and how well it did</div>
-                </li>
-
-                <li className="feature-item">
-                  <div className="fi-check c">✓</div>
-                  <div>Score your satisfaction with accuracy, speed, and overall behavior</div>
-                </li>
-
-                <li className="feature-item">
-                  <div className="fi-check c">✓</div>
-                  <div>Leave free-form feedback describing your experience in your own words</div>
-                </li>
-
-                <li className="feature-item">
-                  <div className="fi-check c">✓</div>
-                  <div>Attach the agent's execution trace to give developers full context</div>
-                </li>
-
-                <li className="feature-item">
-                  <div className="fi-check c">✓</div>
-                  <div>Browse reviews from others before integrating an agent into your workflow</div>
-                </li>
+                {/* .map here iterates over the strings in consumerFeatures and creates 'consumerFeatures.length' (5) list elements */}
+                {consumerFeatures.map((feature, index) => (
+                  <li className="feature-item" key={index}>
+                    <div className="fi-check c">✓</div>
+                    <div>{feature}</div>
+                  </li>
+                ))}
               </ul>
             </div>
 
@@ -141,30 +146,13 @@ export default function LandingPage() {
                 from LLM call costs to tool failures — correlated with real user satisfaction.
               </p>
               <ul className="feature-list">
-                <li className="feature-item">
-                  <div className="fi-check d">✓</div>
-                  <div>Track LLM calls, token usage, and cost-per-run across your agent</div>
-                </li>
-
-                <li className="feature-item">
-                  <div className="fi-check d">✓</div>
-                  <div>Monitor tool call success rates and pinpoint where agents break down</div>
-                </li>
-
-                <li className="feature-item">
-                  <div className="fi-check d">✓</div>
-                  <div>View full execution traces tied to specific user-submitted reviews</div>
-                </li>
-
-                <li className="feature-item">
-                  <div className="fi-check d">✓</div>
-                  <div>Framework-specific views: filter by LangChain, CrewAI, AutoGen, and more</div>
-                </li>
-
-                <li className="feature-item">
-                  <div className="fi-check d">✓</div>
-                  <div>Connect quantitative performance data directly to human satisfaction scores</div>
-                </li>
+                {/* .map here iterates over the strings in developerFeatures and creates 'developerFeatures.length' (5) list elements */}
+                {developerFeatures.map((feature, index) => (
+                  <li className="feature-item" key={index}>
+                    <div className="fi-check d">✓</div>
+                    <div>{feature}</div>
+                  </li>
+                ))}
               </ul>
             </div>
 
@@ -179,21 +167,12 @@ export default function LandingPage() {
         <div className="container">
           <div className="frameworks-label">Designed for popular agent frameworksß</div>
           <div className="framework-pills">
-            <div className="framework-pill">
-              <div className="fp-dot" style={{ background: '#1AA260' }} />LangChain
-            </div>
-
-            <div className="framework-pill">
-              <div className="fp-dot" style={{ background: '#7C3AED' }} />CrewAI
-            </div>
-
-            <div className="framework-pill">
-              <div className="fp-dot" style={{ background: '#0EA5E9' }} />AutoGen
-            </div>
-
-            <div className="framework-pill">
-              <div className="fp-dot" style={{ background: '#F59E0B' }} />OpenAI Swarm
-            </div>
+            {/* .map here iterates over the objects in frameworks and creates 'frameworks.length' (4) framework pill elements */}
+            {frameworks.map(({name, color}) => (
+              <div className="framework-pill" key={name}>
+                <div className="fp-dot" style={{ background: color }} />{name}
+              </div>
+            ))}
 
             <div className="framework-pill" style={{ opacity: 0.5 }}>
               <div className="fp-dot" style={{ background: 'var(--text-dim)' }} />
@@ -210,7 +189,7 @@ export default function LandingPage() {
         <div className="container">
           <div className="loop-header reveal">
             <div className="section-eyebrow">Stay involved</div>
-            <div className="section-title">Follow the build &amp; help shape the platform</div>
+            <div className="section-title">Follow the build & help shape the platform</div>
             <p>
               ReviewMyAgent is actively in development. Sign up for occasional progress
               updates, or share your pain points and ideas — we're building this with
@@ -222,7 +201,7 @@ export default function LandingPage() {
 
             {/* Sign-up For Updates */}
             <div className="loop-panel">
-              <div className="loop-panel-tag">📬 &nbsp;Get Updates</div>
+              <div className="loop-panel-tag">📬 Get Updates</div>
               <h3>Stay in the loop</h3>
               <p>
                 We'll send occasional updates as we hit milestones — no spam, no noise.
@@ -258,7 +237,7 @@ export default function LandingPage() {
 
             {/* Provide Suggestions */}
             <div className="suggest-panel">
-              <div className="loop-panel-tag">💡 &nbsp;Share Feedback</div>
+              <div className="loop-panel-tag">💡 Share Feedback</div>
               <h3>Tell us what you need</h3>
               <p>
                 Using AI agents today and running into problems? Share your real pain
