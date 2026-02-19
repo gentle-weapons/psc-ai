@@ -19,7 +19,7 @@ const robotoMono = Roboto_Mono({
 
 export const metadata = {
   title: 'ReviewMyAgent',
-  description: 'ReviewMyAgent combines real human feedback with hard quantitative data to give you the most complete picture of how an AI agent actually performs.',
+  description: 'Combining real human feedback with hard quantitative data, ReviewMyAgent gives you a complete picture of how an AI agent actually performs.',
 };
 
 export default function RootLayout({ children }) {

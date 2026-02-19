@@ -81,37 +81,6 @@ export default function LandingPage() {
 
       <div className="section-divider" />
 
-      {/* Integrated Frameworks */}
-      <div className="frameworks">
-        <div className="container">
-          <div className="frameworks-label">Built with popular agent frameworks in mind</div>
-          <div className="framework-pills">
-            <div className="framework-pill">
-              <div className="fp-dot" style={{ background: '#1AA260' }} />LangChain
-            </div>
-
-            <div className="framework-pill">
-              <div className="fp-dot" style={{ background: '#7C3AED' }} />CrewAI
-            </div>
-
-            <div className="framework-pill">
-              <div className="fp-dot" style={{ background: '#0EA5E9' }} />AutoGen
-            </div>
-
-            <div className="framework-pill">
-              <div className="fp-dot" style={{ background: '#F59E0B' }} />OpenAI Swarm
-            </div>
-
-            <div className="framework-pill" style={{ opacity: 0.5 }}>
-              <div className="fp-dot" style={{ background: 'var(--text-dim)' }} />
-              More to come
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="section-divider" />
-
       {/* Consumer vs. Developer Features */}
       <section className="section" id="audiences">
         <div className="container">
@@ -205,44 +174,34 @@ export default function LandingPage() {
 
       <div className="section-divider" />
 
-      {/* How The Platform Works */}
-      <section className="section" id="how">
+      {/* Integrated Frameworks */}
+      <div className="frameworks">
         <div className="container">
-          <div className="reveal" style={{ textAlign: 'center', maxWidth: '520px', margin: '0 auto' }}>
-            <div className="section-eyebrow">Process</div>
-            <div className="section-title">How ReviewMyAgent works</div>
-          </div>
-          <div className="how-steps reveal">
-            <div className="step-card">
-              <div className="step-num">01</div>
-              <span className="step-icon">💬</span>
-              <h4>Placeholder</h4>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
+          <div className="frameworks-label">Designed for popular agent frameworksß</div>
+          <div className="framework-pills">
+            <div className="framework-pill">
+              <div className="fp-dot" style={{ background: '#1AA260' }} />LangChain
             </div>
-            <div className="step-card" style={{ borderLeft: '1px solid var(--border)', borderRight: '1px solid var(--border)' }}>
-              <div className="step-num">02</div>
-              <span className="step-icon">💬</span>
-              <h4>Placeholder</h4>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
+
+            <div className="framework-pill">
+              <div className="fp-dot" style={{ background: '#7C3AED' }} />CrewAI
             </div>
-            <div className="step-card">
-              <div className="step-num">03</div>
-              <span className="step-icon">💬</span>
-              <h4>Placeholder</h4>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
+
+            <div className="framework-pill">
+              <div className="fp-dot" style={{ background: '#0EA5E9' }} />AutoGen
+            </div>
+
+            <div className="framework-pill">
+              <div className="fp-dot" style={{ background: '#F59E0B' }} />OpenAI Swarm
+            </div>
+
+            <div className="framework-pill" style={{ opacity: 0.5 }}>
+              <div className="fp-dot" style={{ background: 'var(--text-dim)' }} />
+              More to come
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
       <div className="section-divider" />
 
