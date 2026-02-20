@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { supabase } from './lib/supabaseClient';
 
 export default function LandingPage() {
   // Track selected role for email signup form (`user` | `developer` | `both`)
@@ -22,6 +23,8 @@ export default function LandingPage() {
 
   // Signup form state
   const [signupEmail, setSignupEmail] = useState('');
+  const [status, setStatus] = useState('idle');
+  const [statusMsg, setStatusMsg] = useState('');
 
   // Feedback form state
   const [feedback, setFeedback] = useState('');
@@ -69,6 +72,27 @@ export default function LandingPage() {
       reveals.forEach((el) => observer.unobserve(el));
     };
   }, []);
+
+  // Send to Supabase
+  async function notifyMe() {
+    if (!signupEmail) {
+      setStatus('error')
+      setStatusMsg('Please enter your email.')
+      return
+    }
+    setStatus('loading')
+    // Accessing database tables
+    const { error } = await supabase 
+      .from('emails')
+        .insert([{ email: signupEmail, role: selectedRole }])
+    if (error) {
+      setStatus('error')
+      setStatusMsg(error.message)
+    } else {
+      setStatus('success')
+      setStatusMsg('Awesome! You are now connected!')
+    } 
+  }
 
   return (
     <>
@@ -220,17 +244,25 @@ export default function LandingPage() {
                   </div>
                 </div>
                 <button className="loop-btn" 
-                  onClick={() => {
+                  disabled={status === 'loading' || status === 'success'}
+                  onClick={async () => {
                     // The console.log statements are placeholders to showcase accessing the state variables `email` and `selectedRole`
                     // (if you run the app, and open the console in developer tools, you should see the email and selectedRole printed). 
                     // Eventually, when the database is being integrated, this is where we would trigger sending data to the database.
                     // Depending on the result of adding data to the database, we should indicate a succes or error message to the user.
                     console.log("Email:", signupEmail);
                     console.log("Role:", selectedRole);
+                    await notifyMe();
                     }}
                 >
                   Notify me<ArrowIcon />
                 </button>
+                {status === 'success' && (
+                <div className="loop-note" style={{ color: 'green' }}>{statusMsg}</div>
+                )}
+                {status === 'error' && (
+                <div className="loop-note" style={{ color: 'red' }}>{statusMsg}</div>
+                )}
                 <div className="loop-note">No account needed. Unsubscribe any time.</div>
               </div>
             </div>
