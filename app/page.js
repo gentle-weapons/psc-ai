@@ -70,6 +70,16 @@ export default function LandingPage() {
     };
   }, []);
 
+  // The console.log statements are placeholders to showcase accessing the state variables `signupEmail` and `selectedRole`
+  // (if you run the app, and open the console in developer tools, you should see the email and selectedRole printed). 
+  // Eventually, when the database is being integrated, this is where we would trigger sending data to the database.
+  // Depending on the result of adding data to the database, we should indicate a succes or error message to the user.
+  const handleSignupSubmit = async (e) => {
+    e.preventDefault();
+    console.log("Email:", signupEmail);
+    console.log("Role:", selectedRole);
+  };
+
   return (
     <>
       {/* Navigation Bar */}
@@ -205,7 +215,7 @@ export default function LandingPage() {
                 We'll send occasional updates as we hit milestones — no spam, no noise.
                 Just meaningful progress on what we're building.
               </p>
-              <div className="loop-form">
+              <form onSubmit={handleSignupSubmit} className="loop-form">
                 <input className="loop-input" type="email" placeholder="your@email.com" value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)}/>
                 <div>
                   <div className="chip-label">I am a...</div>
@@ -217,20 +227,11 @@ export default function LandingPage() {
                     ))}
                   </div>
                 </div>
-                <button className="loop-btn" 
-                  onClick={() => {
-                    // The console.log statements are placeholders to showcase accessing the state variables `email` and `selectedRole`
-                    // (if you run the app, and open the console in developer tools, you should see the email and selectedRole printed). 
-                    // Eventually, when the database is being integrated, this is where we would trigger sending data to the database.
-                    // Depending on the result of adding data to the database, we should indicate a succes or error message to the user.
-                    console.log("Email:", signupEmail);
-                    console.log("Role:", selectedRole);
-                    }}
-                >
-                  Notify me<ArrowIcon />
+                <button type="submit" className="loop-btn">
+                  Notify me
                 </button>
                 <div className="loop-note">No account needed. Unsubscribe any time.</div>
-              </div>
+              </form>
             </div>
         </div>
       </section>
