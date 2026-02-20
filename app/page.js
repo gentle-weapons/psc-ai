@@ -1,7 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
+
+// Custom Components from /components
+import ArrowIcon from '@/components/ArrowIcon';
+import NavigationBar from '@/components/NavigationBar';
 
 export default function LandingPage() {
   // Track selected role for email signup form (`user` | `developer` | `both`)
@@ -15,17 +19,23 @@ export default function LandingPage() {
   ];
 
   // Track selected category for feedback form (`Pain point` | `Feature idea` | `Use case` | `Other`)
+  // NOT CURRENTLY IN USE (FEEDBACK IMPLEMENTED LATER)
   const [selectedCategory, setSelectedCategory] = useState('Pain point');
 
   // Category options displayed in the "Tell us what you need" section
+  // NOT CURRENTLY IN USE (FEEDBACK IMPLEMENTED LATER)
   const categories = ['Pain point', 'Feature idea', 'Use case', 'Other'];
 
   // Signup form state
   const [signupEmail, setSignupEmail] = useState('');
 
   // Feedback form state
+  // NOT CURRENTLY IN USE (FEEDBACK IMPLEMENTED LATER)
   const [feedback, setFeedback] = useState('');
   const [feedbackEmail, setFeedbackEmail] = useState('');
+
+  // Status state, indicating the status of e-mail submission
+  const [status, setStatus] = useState(null) // null | 'success' | 'error'
 
   const consumerFeatures = [
     "Rate whether the agent completed your task, and how well it did",
@@ -50,50 +60,25 @@ export default function LandingPage() {
     { name: "OpenAI Swarm", color: "#F59E0B" }
   ]
 
-  // Scroll reveal
-  useEffect(() => {
-    const reveals = document.querySelectorAll('.reveal');
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) e.target.classList.add('visible');
-        });
-      },
-      { threshold: 0.08 }
-    );
-
-    reveals.forEach((el) => observer.observe(el));
-
-    return () => {
-      reveals.forEach((el) => observer.unobserve(el));
-    };
-  }, []);
-
   // The console.log statements are placeholders to showcase accessing the state variables `signupEmail` and `selectedRole`
   // (if you run the app, and open the console in developer tools, you should see the email and selectedRole printed). 
   // Eventually, when the database is being integrated, this is where we would trigger sending data to the database.
   // Depending on the result of adding data to the database, we should indicate a succes or error message to the user.
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
-    console.log("Email:", signupEmail);
-    console.log("Role:", selectedRole);
+
+    try {
+      console.log("Email:", signupEmail);
+      console.log("Role:", selectedRole);
+      setStatus('success')
+    } catch (error) {
+      setStatus('error')
+    }
   };
 
   return (
     <>
-      {/* Navigation Bar */}
-      <nav>
-        <div className="container">
-          <div className="nav-inner">
-            <Link href="#" className="logo">ReviewMyAgent</Link>
-            <div className="nav-links">
-              <a href="#features" className="nav-link">Features</a>
-              <a href="#connect" className="btn-nav">Stay Updated</a>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <NavigationBar />
 
       {/* Hero Section */}
       <section className="hero">
@@ -194,7 +179,7 @@ export default function LandingPage() {
 
       <div className="section-divider" />
 
-      {/* Stay In The Loop / Provide Feedback */}
+      {/* Stay In The Loop */}
       <section className="loop-section" id="connect">
         <div className="container">
           <div className="loop-header reveal">
@@ -246,14 +231,5 @@ export default function LandingPage() {
         </div>
       </footer>
     </>
-  );
-}
-
-// Arrow icon
-function ArrowIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-      <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
   );
 }
