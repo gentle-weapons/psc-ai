@@ -73,24 +73,29 @@ export default function LandingPage() {
     };
   }, []);
 
-  // Send to Supabase
+  // Send to supabase, check email format, add to table
   async function notifyMe() {
+    setStatus('loading')
     if (!signupEmail) {
-      setStatus('error')
-      setStatusMsg('Please enter your email.')
+      setStatus('error');
+      setStatusMsg('Please enter your email.');
       return
     }
-    setStatus('loading')
-    // Accessing database tables
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(signupEmail)) {
+      console.log("Invalid email format");
+      setStatus('error');
+      setStatusMsg('Please enter a valid email address.');
+      return
+    }
     const { error } = await supabase 
       .from('emails')
         .insert([{ email: signupEmail, role: selectedRole }])
     if (error) {
-      setStatus('error')
-      setStatusMsg(error.message)
+      setStatus('error');
+      setStatusMsg(error.message);
     } else {
-      setStatus('success')
-      setStatusMsg('Awesome! You are now connected!')
+      setStatus('success');
+      setStatusMsg('Awesome! You are now connected!');
     } 
   }
 
