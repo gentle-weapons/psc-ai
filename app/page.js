@@ -150,7 +150,6 @@ export default function LandingPage() {
                 ))}
               </ul>
             </div>
-
           </div>
         </div>
       </section>
@@ -197,8 +196,8 @@ export default function LandingPage() {
               <div className="loop-panel-tag">📬 Get Updates</div>
               <h3>Stay in the loop</h3>
               <p>
-                We'll send occasional updates as we hit milestones — no spam, no noise.
-                Just meaningful progress on what we're building.
+                We'll send occasional updates as we hit milestones with meaningful 
+                progress on what we're building and a heads up for major feature updates.
               </p>
               <form onSubmit={handleSignupSubmit} className="loop-form">
                 <input className="loop-input" type="email" placeholder="your@email.com" value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)}/>
