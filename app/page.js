@@ -61,10 +61,9 @@ export default function LandingPage() {
     { name: "OpenAI Swarm", color: "#F59E0B" }
   ]
 
-  // The console.log statements are placeholders to showcase accessing the state variables `signupEmail` and `selectedRole`
-  // (if you run the app, and open the console in developer tools, you should see the email and selectedRole printed). 
-  // Eventually, when the database is being integrated, this is where we would trigger sending data to the database.
-  // Depending on the result of adding data to the database, we should indicate a succes or error message to the user.
+  // This function handles submitting the e-mail entered into the input form to the database.
+  // Currently the Supabase database is not integrated, so as a placeholder, the e-mail
+  // and role are logged to the console. Statuses should still work in a similar way.
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
 
@@ -179,7 +178,7 @@ export default function LandingPage() {
                   <div className="chip-label">I am a...</div>
                   <div className="loop-role-row">
                     {roleOptions.map(({ label, value }) => (
-                      <button key={value} className={`role-chip ${selectedRole === value ? `sel-${value}` : ''}`} onClick={() => setSelectedRole(value)}>
+                      <button type="button" key={value} className={`role-chip ${selectedRole === value ? `sel-${value}` : ''}`} onClick={() => setSelectedRole(value)}>
                         {label}
                       </button>
                     ))}
