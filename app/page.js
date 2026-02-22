@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 // Custom Components from '/components'
+import { SignUpForm, SuccessMessage, ErrorMessage } from '@/components/Forms';
 import ArrowIcon from '@/components/ArrowIcon';
 import NavigationBar from '@/components/NavigationBar';
 import Footer from '@/components/Footer';
@@ -83,10 +84,7 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="hero">
         <div className="container">
-          <div className="hero-eyebrow">
-            <span className="eyebrow-dot"/>
-            In development — follow along
-          </div>
+          <div className="hero-eyebrow"> <span className="eyebrow-dot"/>In development — follow along </div>
           <h1>Performance reviews<br />for your <em>AI workforce</em></h1>
           <p className="hero-sub">Combining real human feedback with hard quantitative data, ReviewMyAgent gives you a complete picture of how an AI agent actually performs.</p>
           <div className="hero-actions">
@@ -164,32 +162,23 @@ export default function LandingPage() {
             </p>
           </div>
 
-            {/* Sign-up For Updates */}
-            <div className="loop-panel">
-              <div className="loop-panel-tag">📬 Get Updates</div>
-              <h3>Stay in the loop</h3>
-              <p>
-                We'll send occasional updates as we hit milestones with meaningful 
-                progress on what we're building and a heads up for major feature updates.
-              </p>
-              <form onSubmit={handleSignupSubmit} className="loop-form">
-                <input className="loop-input" type="email" placeholder="your@email.com" value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)}/>
-                <div>
-                  <div className="chip-label">I am a...</div>
-                  <div className="loop-role-row">
-                    {roleOptions.map(({ label, value }) => (
-                      <button type="button" key={value} className={`role-chip ${selectedRole === value ? `sel-${value}` : ''}`} onClick={() => setSelectedRole(value)}>
-                        {label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <button type="submit" className="loop-btn">
-                  Notify me
-                </button>
-                <div className="loop-note">No account needed. Unsubscribe any time.</div>
-              </form>
-            </div>
+          <div className="loop-panel">
+            { status === null &&
+              <SignUpForm 
+                signupEmail={signupEmail} 
+                setSignupEmail={setSignupEmail} 
+                roleOptions={roleOptions} 
+                selectedRole={selectedRole}
+                setSelectedRole={setSelectedRole}
+                handleSignupSubmit={handleSignupSubmit}
+              />
+            }
+
+            { status === 'success' && <SuccessMessage signupEmail={signupEmail} /> }
+
+            { status === 'error' && <ErrorMessage onRetry={() => setStatus(null)} /> }
+          </div>
+
         </div>
       </section>
 
