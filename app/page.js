@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 
-// Custom Components from /components
+// Custom Components from '/components'
 import ArrowIcon from '@/components/ArrowIcon';
 import NavigationBar from '@/components/NavigationBar';
+import Footer from '@/components/Footer';
+import FeaturesCard from '@/components/FeaturesCard';
 
 export default function LandingPage() {
   // Track selected role for email signup form (`user` | `developer` | `both`)
@@ -84,7 +85,7 @@ export default function LandingPage() {
       <section className="hero">
         <div className="container">
           <div className="hero-eyebrow">
-            <span className="eyebrow-dot"></span>
+            <span className="eyebrow-dot"/>
             In development — follow along
           </div>
           <h1>Performance reviews<br />for your <em>AI workforce</em></h1>
@@ -101,55 +102,28 @@ export default function LandingPage() {
       {/* Consumer vs. Developer Features */}
       <section className="section" id="features">
         <div className="container">
-          <div className="reveal" style={{ textAlign: 'center', maxWidth: '620px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', maxWidth: '620px', margin: '0 auto' }}>
             <div className="section-eyebrow">Two perspectives, one platform</div>
             <div className="section-title">
               Built for the people who use agents,<br />and the people who build them
             </div>
           </div>
-          <div className="audience-split reveal">
+          <div className="audience-split">
+            <FeaturesCard 
+              type="consumer" 
+              tag="For Users & Businesses" 
+              title={<>Your experience<br />shapes the future</>} 
+              description="You use AI agents every day. Your feedback is the most valuable signal a developer can get. Now there's a structured way to give it."
+              features={consumerFeatures}
+            />
 
-            {/* Consumer */}
-            <div className="audience-card consumer">
-              <div className="audience-tag consumer">
-                <span className="tag-pip c" /> For Users &amp; Businesses
-              </div>
-              <h3>Your experience<br />shapes the future</h3>
-              <p>
-                You use AI agents every day. Your feedback is the most valuable signal
-                a developer can get — and now there's a structured way to give it.
-              </p>
-              <ul className="feature-list">
-                {/* .map here iterates over the strings in consumerFeatures and creates 'consumerFeatures.length' (5) list elements */}
-                {consumerFeatures.map((feature, index) => (
-                  <li className="feature-item" key={index}>
-                    <div className="fi-check c">✓</div>
-                    <div>{feature}</div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Developer */}
-            <div className="audience-card developer" id="developers">
-              <div className="audience-tag developer">
-                <span className="tag-pip d" /> For Developers &amp; Builders
-              </div>
-              <h3>Metrics that tell<br />the whole story</h3>
-              <p>
-                Surface-level evals aren't enough. See exactly how your agents run —
-                from LLM call costs to tool failures — correlated with real user satisfaction.
-              </p>
-              <ul className="feature-list">
-                {/* .map here iterates over the strings in developerFeatures and creates 'developerFeatures.length' (5) list elements */}
-                {developerFeatures.map((feature, index) => (
-                  <li className="feature-item" key={index}>
-                    <div className="fi-check d">✓</div>
-                    <div>{feature}</div>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <FeaturesCard
+              type="developer"
+              tag="For Developers & Builders"
+              title={<>Metrics that tell<br />the whole story</>}
+              description="Surface-level evals aren't enough. Correlated with real user satisfaction, see exactly how your agents run.."
+              features={developerFeatures}
+            />
           </div>
         </div>
       </section>
@@ -220,15 +194,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer>
-        <div className="container">
-          <div className="footer-inner">
-            <Link href="#" className="logo" style={{ fontSize: '16px' }}>ReviewMyAgent</Link>
-            <div className="footer-copy">© 2026 Gentle Systems</div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </>
   );
 }

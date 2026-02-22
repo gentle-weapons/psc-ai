@@ -1,0 +1,118 @@
+/* Styling sheet for the FeaturesCard component */
+
+.audienceCard {
+  background: var(--surface);
+  padding: 52px 48px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.25s;
+}
+
+.audienceCard:hover { 
+    background: var(--surface2); 
+}
+
+.audienceCard::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+
+.audienceCard.consumer::after { 
+    background: linear-gradient(90deg, var(--accent) 0%, transparent 70%); 
+}
+.audienceCard.developer::after { 
+    background: linear-gradient(90deg, var(--amber) 0%, transparent 70%); 
+}
+
+.audienceTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 22px;
+}
+
+.audienceTag.consumer { 
+    color: var(--accent); 
+}
+
+.audienceTag.developer { 
+    color: var(--amber); 
+}
+
+.tagPip { 
+    width: 7px; 
+    height: 7px; 
+    border-radius: 50%; 
+    display: inline-block; 
+}
+
+.tagPip.consumer { 
+    background: var(--accent); 
+}
+
+.tagPip.developer { 
+    background: var(--amber); 
+}
+
+.audienceCard h3 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+  line-height: 1.2;
+  margin-bottom: 14px;
+}
+
+.audienceCard > p {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--text-muted);
+  line-height: 1.75;
+  margin-bottom: 32px;
+}
+
+.featureList { 
+    list-style: none; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 13px; 
+}
+
+.featureItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.fiCheck {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  margin-top: 1px;
+}
+
+.fiCheck.consumer {
+  background: var(--accent-dim);
+  color: var(--accent);
+  border: 1px solid rgba(139, 92, 246, 0.22);
+}
+
+.fiCheck.developer {
+  background: var(--amber-dim);
+  color: var(--amber);
+  border: 1px solid rgba(245, 166, 35, 0.2);
+}
