@@ -1,7 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import { useState } from 'react';
+
+// Custom Components from '/components'
+import { SignUpForm, SuccessMessage, ErrorMessage } from '@/components/Forms';
+import ArrowIcon from '@/components/ArrowIcon';
+import NavigationBar from '@/components/NavigationBar';
+import Footer from '@/components/Footer';
+import FeaturesCard from '@/components/FeaturesCard';
 import { supabase } from './lib/supabaseClient';
 
 export default function LandingPage() {
@@ -16,9 +22,11 @@ export default function LandingPage() {
   ];
 
   // Track selected category for feedback form (`Pain point` | `Feature idea` | `Use case` | `Other`)
+  // NOT CURRENTLY IN USE (FEEDBACK IMPLEMENTED LATER)
   const [selectedCategory, setSelectedCategory] = useState('Pain point');
 
   // Category options displayed in the "Tell us what you need" section
+  // NOT CURRENTLY IN USE (FEEDBACK IMPLEMENTED LATER)
   const categories = ['Pain point', 'Feature idea', 'Use case', 'Other'];
 
   // Signup form state
@@ -27,8 +35,12 @@ export default function LandingPage() {
   const [statusMsg, setStatusMsg] = useState('');
 
   // Feedback form state
+  // NOT CURRENTLY IN USE (FEEDBACK IMPLEMENTED LATER)
   const [feedback, setFeedback] = useState('');
   const [feedbackEmail, setFeedbackEmail] = useState('');
+
+  // Status state, indicating the status of e-mail submission
+  const [status, setStatus] = useState(null) // null | 'success' | 'error'
 
   const consumerFeatures = [
     "Rate whether the agent completed your task, and how well it did",
@@ -53,25 +65,20 @@ export default function LandingPage() {
     { name: "OpenAI Swarm", color: "#F59E0B" }
   ]
 
-  // Scroll reveal
-  useEffect(() => {
-    const reveals = document.querySelectorAll('.reveal');
+  // This function handles submitting the e-mail entered into the input form to the database.
+  // Currently the Supabase database is not integrated, so as a placeholder, the e-mail
+  // and role are logged to the console. Statuses should still work in a similar way.
+  const handleSignupSubmit = async (e) => {
+    e.preventDefault();
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) e.target.classList.add('visible');
-        });
-      },
-      { threshold: 0.08 }
-    );
-
-    reveals.forEach((el) => observer.observe(el));
-
-    return () => {
-      reveals.forEach((el) => observer.unobserve(el));
-    };
-  }, []);
+    try {
+      console.log("Email:", signupEmail);
+      console.log("Role:", selectedRole);
+      setStatus('success')
+    } catch (error) {
+      setStatus('error')
+    }
+  };
 
   // Send to supabase, check email format, add to table
   async function notifyMe() {
@@ -101,26 +108,12 @@ export default function LandingPage() {
 
   return (
     <>
-      {/* Navigation Bar */}
-      <nav>
-        <div className="container">
-          <div className="nav-inner">
-            <Link href="#" className="logo">ReviewMyAgent</Link>
-            <div className="nav-links">
-              <a href="#features" className="nav-link">Features</a>
-              <a href="#connect" className="btn-nav">Stay Updated</a>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <NavigationBar />
 
       {/* Hero Section */}
       <section className="hero">
         <div className="container">
-          <div className="hero-eyebrow">
-            <span className="eyebrow-dot"></span>
-            In development — follow along
-          </div>
+          <div className="hero-eyebrow"> <span className="eyebrow-dot"/>In development — follow along </div>
           <h1>Performance reviews<br />for your <em>AI workforce</em></h1>
           <p className="hero-sub">Combining real human feedback with hard quantitative data, ReviewMyAgent gives you a complete picture of how an AI agent actually performs.</p>
           <div className="hero-actions">
@@ -135,56 +128,28 @@ export default function LandingPage() {
       {/* Consumer vs. Developer Features */}
       <section className="section" id="features">
         <div className="container">
-          <div className="reveal" style={{ textAlign: 'center', maxWidth: '620px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', maxWidth: '620px', margin: '0 auto' }}>
             <div className="section-eyebrow">Two perspectives, one platform</div>
             <div className="section-title">
               Built for the people who use agents,<br />and the people who build them
             </div>
           </div>
-          <div className="audience-split reveal">
+          <div className="audience-split">
+            <FeaturesCard 
+              type="consumer" 
+              tag="For Users & Businesses" 
+              title={<>Your experience<br />shapes the future</>} 
+              description="You use AI agents every day. Your feedback is the most valuable signal a developer can get. Now there's a structured way to give it."
+              features={consumerFeatures}
+            />
 
-            {/* Consumer */}
-            <div className="audience-card consumer">
-              <div className="audience-tag consumer">
-                <span className="tag-pip c" /> For Users &amp; Businesses
-              </div>
-              <h3>Your experience<br />shapes the future</h3>
-              <p>
-                You use AI agents every day. Your feedback is the most valuable signal
-                a developer can get — and now there's a structured way to give it.
-              </p>
-              <ul className="feature-list">
-                {/* .map here iterates over the strings in consumerFeatures and creates 'consumerFeatures.length' (5) list elements */}
-                {consumerFeatures.map((feature, index) => (
-                  <li className="feature-item" key={index}>
-                    <div className="fi-check c">✓</div>
-                    <div>{feature}</div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Developer */}
-            <div className="audience-card developer" id="developers">
-              <div className="audience-tag developer">
-                <span className="tag-pip d" /> For Developers &amp; Builders
-              </div>
-              <h3>Metrics that tell<br />the whole story</h3>
-              <p>
-                Surface-level evals aren't enough. See exactly how your agents run —
-                from LLM call costs to tool failures — correlated with real user satisfaction.
-              </p>
-              <ul className="feature-list">
-                {/* .map here iterates over the strings in developerFeatures and creates 'developerFeatures.length' (5) list elements */}
-                {developerFeatures.map((feature, index) => (
-                  <li className="feature-item" key={index}>
-                    <div className="fi-check d">✓</div>
-                    <div>{feature}</div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
+            <FeaturesCard
+              type="developer"
+              tag="For Developers & Builders"
+              title={<>Metrics that tell<br />the whole story</>}
+              description="Surface-level evals aren't enough. Correlated with real user satisfaction, see exactly how your agents run.."
+              features={developerFeatures}
+            />
           </div>
         </div>
       </section>
@@ -213,7 +178,7 @@ export default function LandingPage() {
 
       <div className="section-divider" />
 
-      {/* Stay In The Loop / Provide Feedback */}
+      {/* Stay In The Loop */}
       <section className="loop-section" id="connect">
         <div className="container">
           <div className="loop-header reveal">
@@ -226,6 +191,21 @@ export default function LandingPage() {
             </p>
           </div>
 
+          <div className="loop-panel">
+            { status === null &&
+              <SignUpForm 
+                signupEmail={signupEmail} 
+                setSignupEmail={setSignupEmail} 
+                roleOptions={roleOptions} 
+                selectedRole={selectedRole}
+                setSelectedRole={setSelectedRole}
+                handleSignupSubmit={handleSignupSubmit}
+              />
+            }
+
+            { status === 'success' && <SuccessMessage signupEmail={signupEmail} /> }
+
+            { status === 'error' && <ErrorMessage onRetry={() => setStatus(null)} /> }
           <div className="loop-grid reveal">
 
             {/* Sign-up For Updates */}
@@ -320,27 +300,11 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
+
         </div>
       </section>
 
-      {/* Footer */}
-      <footer>
-        <div className="container">
-          <div className="footer-inner">
-            <Link href="#" className="logo" style={{ fontSize: '16px' }}>ReviewMyAgent</Link>
-            <div className="footer-copy">© 2026 Gentle Systems</div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </>
-  );
-}
-
-// Arrow icon
-function ArrowIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-      <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
   );
 }

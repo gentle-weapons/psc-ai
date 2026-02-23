@@ -1,0 +1,23 @@
+/* Styling sheet for the Footer component */
+
+.logo {
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: -0.3px;
+  color: var(--text);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footerInner { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+}
+
+.footerCopy {
+    font-size: 12px;
+    color: var(--text-dim);
+}
