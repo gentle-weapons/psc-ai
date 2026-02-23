@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { supabase } from './lib/supabaseClient';
 
 // Custom Components from '/components'
 import { SignUpForm, SuccessMessage, ErrorMessage } from '@/components/Forms';
@@ -28,13 +29,13 @@ export default function LandingPage() {
   // NOT CURRENTLY IN USE (FEEDBACK IMPLEMENTED LATER)
   const categories = ['Pain point', 'Feature idea', 'Use case', 'Other'];
 
-  // Signup form state
-  const [signupEmail, setSignupEmail] = useState('');
-
   // Feedback form state
   // NOT CURRENTLY IN USE (FEEDBACK IMPLEMENTED LATER)
   const [feedback, setFeedback] = useState('');
   const [feedbackEmail, setFeedbackEmail] = useState('');
+
+  // Signup form state
+  const [signupEmail, setSignupEmail] = useState('');
 
   // Status state, indicating the status of e-mail submission
   const [status, setStatus] = useState(null) // null | 'success' | 'error'
@@ -63,17 +64,24 @@ export default function LandingPage() {
   ]
 
   // This function handles submitting the e-mail entered into the input form to the database.
-  // Currently the Supabase database is not integrated, so as a placeholder, the e-mail
-  // and role are logged to the console. Statuses should still work in a similar way.
+  // Checks if email is present, valid, then sends to supabase
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
-
+    if (!signupEmail) {
+      setStatus('error');
+      return;
+    }
     try {
-      console.log("Email:", signupEmail);
-      console.log("Role:", selectedRole);
-      setStatus('success')
+      const { error } = await supabase 
+        .from('emails') 
+          .insert([{ email: signupEmail, role: selectedRole }])
+      if (error) {
+        setStatus('error');
+      } else {
+      setStatus('success');
+      } 
     } catch (error) {
-      setStatus('error')
+    setStatus('error')
     }
   };
 
@@ -178,7 +186,6 @@ export default function LandingPage() {
 
             { status === 'error' && <ErrorMessage onRetry={() => setStatus(null)} /> }
           </div>
-
         </div>
       </section>
 
