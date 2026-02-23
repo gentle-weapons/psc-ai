@@ -28,9 +28,9 @@ This is a pre-launch landing page for the `ReviewMyAgent` platform - [https://ww
 ```
 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser.
-```
 
 ## Project Structure
+
 ```
 app/
 ├── page.js          # Home page (/)
@@ -48,8 +48,10 @@ components/          # Custom React Components
 
 If running/testing locally, the project requires two environment variables to be set in a .env file:
 
+```
 - NEXT_PUBLIC_SUPABASE_URL
 - NEXT_PUBLIC_SUPABASE_ANON_KEY
+```
 
 ## Tech Stack
 
