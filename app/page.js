@@ -29,15 +29,13 @@ export default function LandingPage() {
   // NOT CURRENTLY IN USE (FEEDBACK IMPLEMENTED LATER)
   const categories = ['Pain point', 'Feature idea', 'Use case', 'Other'];
 
-  // Signup form state
-  const [signupEmail, setSignupEmail] = useState('');
-  const [status, setStatus] = useState('idle');
-  const [statusMsg, setStatusMsg] = useState('');
-
   // Feedback form state
   // NOT CURRENTLY IN USE (FEEDBACK IMPLEMENTED LATER)
   const [feedback, setFeedback] = useState('');
   const [feedbackEmail, setFeedbackEmail] = useState('');
+
+  // Signup form state
+  const [signupEmail, setSignupEmail] = useState('');
 
   // Status state, indicating the status of e-mail submission
   const [status, setStatus] = useState(null) // null | 'success' | 'error'
@@ -66,45 +64,26 @@ export default function LandingPage() {
   ]
 
   // This function handles submitting the e-mail entered into the input form to the database.
-  // Currently the Supabase database is not integrated, so as a placeholder, the e-mail
-  // and role are logged to the console. Statuses should still work in a similar way.
+  // Checks if email is present, valid, then sends to supabase
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
-
-    try {
-      console.log("Email:", signupEmail);
-      console.log("Role:", selectedRole);
-      setStatus('success')
-    } catch (error) {
-      setStatus('error')
-    }
-  };
-
-  // Send to supabase, check email format, add to table
-  async function notifyMe() {
-    setStatus('loading')
     if (!signupEmail) {
       setStatus('error');
-      setStatusMsg('Please enter your email.');
-      return
+      return;
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(signupEmail)) {
-      console.log("Invalid email format");
-      setStatus('error');
-      setStatusMsg('Please enter a valid email address.');
-      return
-    }
-    const { error } = await supabase 
-      .from('emails')
-        .insert([{ email: signupEmail, role: selectedRole }])
-    if (error) {
-      setStatus('error');
-      setStatusMsg(error.message);
-    } else {
+    try {
+      const { error } = await supabase 
+        .from('emails') 
+          .insert([{ email: signupEmail, role: selectedRole }])
+      if (error) {
+        setStatus('error');
+      } else {
       setStatus('success');
-      setStatusMsg('Awesome! You are now connected!');
-    } 
-  }
+      } 
+    } catch (error) {
+    setStatus('error')
+    }
+  };
 
   return (
     <>
@@ -206,51 +185,8 @@ export default function LandingPage() {
             { status === 'success' && <SuccessMessage signupEmail={signupEmail} /> }
 
             { status === 'error' && <ErrorMessage onRetry={() => setStatus(null)} /> }
-          <div className="loop-grid reveal">
-
-            {/* Sign-up For Updates */}
-            <div className="loop-panel">
-              <div className="loop-panel-tag">📬 Get Updates</div>
-              <h3>Stay in the loop</h3>
-              <p>
-                We'll send occasional updates as we hit milestones — no spam, no noise.
-                Just meaningful progress on what we're building.
-              </p>
-              <div className="loop-form">
-                <input className="loop-input" type="email" placeholder="your@email.com" value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)}/>
-                <div>
-                  <div className="chip-label">I am a...</div>
-                  <div className="loop-role-row">
-                    {roleOptions.map(({ label, value }) => (
-                      <button key={value} className={`role-chip ${selectedRole === value ? `sel-${value}` : ''}`} onClick={() => setSelectedRole(value)}>
-                        {label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <button className="loop-btn" 
-                  disabled={status === 'loading' || status === 'success'}
-                  onClick={async () => {
-                    // The console.log statements are placeholders to showcase accessing the state variables `email` and `selectedRole`
-                    // (if you run the app, and open the console in developer tools, you should see the email and selectedRole printed). 
-                    // Eventually, when the database is being integrated, this is where we would trigger sending data to the database.
-                    // Depending on the result of adding data to the database, we should indicate a succes or error message to the user.
-                    console.log("Email:", signupEmail);
-                    console.log("Role:", selectedRole);
-                    await notifyMe();
-                    }}
-                >
-                  Notify me<ArrowIcon />
-                </button>
-                {status === 'success' && (
-                <div className="loop-note" style={{ color: 'green' }}>{statusMsg}</div>
-                )}
-                {status === 'error' && (
-                <div className="loop-note" style={{ color: 'red' }}>{statusMsg}</div>
-                )}
-                <div className="loop-note">No account needed. Unsubscribe any time.</div>
               </div>
-            </div>
+          <div className="loop-grid reveal">
 
             {/* Provide Suggestions */}
             <div className="suggest-panel">
