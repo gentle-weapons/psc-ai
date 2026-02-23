@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { supabase } from './lib/supabaseClient';
 
 // Custom Components from '/components'
 import { SignUpForm, SuccessMessage, ErrorMessage } from '@/components/Forms';
@@ -8,7 +9,6 @@ import ArrowIcon from '@/components/ArrowIcon';
 import NavigationBar from '@/components/NavigationBar';
 import Footer from '@/components/Footer';
 import FeaturesCard from '@/components/FeaturesCard';
-import { supabase } from './lib/supabaseClient';
 
 export default function LandingPage() {
   // Track selected role for email signup form (`user` | `developer` | `both`)
@@ -185,58 +185,7 @@ export default function LandingPage() {
             { status === 'success' && <SuccessMessage signupEmail={signupEmail} /> }
 
             { status === 'error' && <ErrorMessage onRetry={() => setStatus(null)} /> }
-              </div>
-          <div className="loop-grid reveal">
-
-            {/* Provide Suggestions */}
-            <div className="suggest-panel">
-              <div className="loop-panel-tag">💡 Share Feedback</div>
-              <h3>Tell us what you need</h3>
-              <p>
-                Using AI agents today and running into problems? Share your real pain
-                points and feature ideas — this is your chance to directly influence
-                what we build.
-              </p>
-              <div className="suggest-form">
-                <div>
-                  <div className="chip-label">Category</div>
-                  <div className="suggest-category">
-                    {categories.map((cat) => (
-                      <button key={cat} className={`cat-chip ${selectedCategory === cat ? 'sel' : ''}`} onClick={() => setSelectedCategory(cat)}>
-                        {cat}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <textarea
-                  className="suggest-textarea"
-                  placeholder="Describe your experience with AI agents today, what's broken, or a feature you'd want to see..."
-                  value={feedback}
-                  onChange={(e) => setFeedback(e.target.value)}
-                />
-                <input
-                  className="loop-input"
-                  type="email"
-                  placeholder="Email (optional — only if you'd like a reply)"
-                  value={feedbackEmail}
-                  onChange={(e) => setFeedbackEmail(e.target.value)}
-                />
-                <button className="suggest-btn" onClick={() => {
-                  // The console.log statements are placeholders to showcase accessing the state variables `selectedCategory`, `feedback`,
-                  // and `feedbackEmail` (if you run the app, and open the console in developer tools, you should see the email and selectedRole printed). 
-                  // Eventually, when the database is being integrated, this is where we would trigger sending data to the database.
-                  // Depending on the result of adding data to the database, we should indicate a succes or error message to the user.
-                  console.log("Category:", selectedCategory);
-                  console.log("Feedback:", feedback);
-                  console.log("Email (optional):", feedbackEmail);
-                }}
-                >
-                  Submit feedback<ArrowIcon />
-                </button>
-              </div>
-            </div>
           </div>
-
         </div>
       </section>
 
