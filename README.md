@@ -2,7 +2,7 @@
 
 This is a pre-launch landing page for the `ReviewMyAgent` platform - [https://www.reviewmyagent.today](https://www.reviewmyagent.today)
 
-## Getting Started
+## Test The Project Locally
 
 ### Prerequisites
 
@@ -12,24 +12,51 @@ This is a pre-launch landing page for the `ReviewMyAgent` platform - [https://ww
 ### Installation
 
 1. Clone the repository:
+
 ```bash
-   git clone https://github.com/gentle-weapons/psc-ai.git
+   git clone -b initial-ui https://github.com/gentle-weapons/psc-ai.git
    cd psc-ai
 ```
 
 2. Install dependencies:
+
 ```bash
    npm install
 ```
 
-3. Start the development server:
+3. Add local environment variables:
+
+The fully deployed project uses the Supabase environment variables set in Railway.
+
+To test the project locally, you need to create a `.env.local` file, and set the following environment variables:
+
+- NEXT_PUBLIC_SUPABASE_URL
+- NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+You'll need a Supabase project. Once created, run the below SQL in the SQL Editor to set up the required table (unless using the actual team Supabase project). You can find your environment variable values under Project Settings → API.
+
+The following database schema is used:
+
+```sql
+CREATE TABLE public.emails (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  email text NOT NULL DEFAULT ''::text UNIQUE,
+  created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
+  subscribed boolean DEFAULT true,
+  role text DEFAULT ''::text,
+  CONSTRAINT emails_pkey PRIMARY KEY (id)
+);
+```
+
+4. Start the development server:
+
 ```bash
    npm run dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Project Structure
+## Directory Structure
 
 ```
 app/
@@ -42,15 +69,6 @@ app/
 public/              # Static files (images, etc.)
 
 components/          # Custom React Components
-```
-
-## Environment Variables
-
-If running/testing locally, the project requires two environment variables to be set in a .env file:
-
-```
-- NEXT_PUBLIC_SUPABASE_URL
-- NEXT_PUBLIC_SUPABASE_ANON_KEY
 ```
 
 ## Tech Stack
