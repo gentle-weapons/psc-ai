@@ -1,53 +1,63 @@
-# Overview
+# Project Overview
 
-A Next.js-based landing and sign-up page with plans to expand into the full PSC-AI web application.
+This is a pre-launch landing page for the `ReviewMyAgent` platform - [https://www.reviewmyagent.today](https://www.reviewmyagent.today)
 
-## Getting Started
+## Test The Project Locally
 
 ### Prerequisites
 
-You need Node.js installed to run this project locally.
+- [Node.js](https://nodejs.org) (v18 or higher)
+- [npm](https://www.npmjs.com)
 
-**On Mac:**
+### Installation
+
+1. Clone the repository:
+
 ```bash
-brew install node
+   git clone -b initial-ui https://github.com/gentle-weapons/psc-ai.git
+   cd psc-ai
 ```
 
-**On Windows:**
-1. Download the LTS version from https://nodejs.org/
-2. Run the installer and follow the setup wizard
-3. Restart your terminal
+2. Install dependencies:
 
-**Verify installation:**
 ```bash
-node --version
-npm --version
+   npm install
 ```
 
-### Running the Local Development Server
+3. Add local environment variables:
 
-1. Install dependencies:
-```bash
-npm install
+The fully deployed project uses the Supabase environment variables set in Railway.
+
+To test the project locally, you need to create a `.env.local` file, and set the following environment variables:
+
+- NEXT_PUBLIC_SUPABASE_URL
+- NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+You'll need a Supabase project. Once created, run the below SQL in the SQL Editor to set up the required table (unless using the actual team Supabase project). You can find your environment variable values under Project Settings → API.
+
+The following database schema is used:
+
+```sql
+CREATE TABLE public.emails (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  email text NOT NULL DEFAULT ''::text UNIQUE,
+  created_at timestamp with time zone NOT NULL DEFAULT timezone('utc'::text, now()),
+  subscribed boolean DEFAULT true,
+  role text DEFAULT ''::text,
+  CONSTRAINT emails_pkey PRIMARY KEY (id)
+);
 ```
 
-2. Start the development server:
+4. Start the development server:
+
 ```bash
-npm run dev
+   npm run dev
 ```
 
-3. Open http://localhost:3000 in your browser
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-The page will auto-reload when you make changes to the code.
+## Directory Structure
 
-### Other Useful Commands
-```bash
-npm run build      # Build for production
-npm run start      # Run production build locally
-npm run lint       # Run ESLint to check code quality
-```
-
-## Project Structure
 ```
 app/
 ├── page.js          # Home page (/)
@@ -57,41 +67,24 @@ app/
     └── page.js      # Additional pages (/route)
 
 public/              # Static files (images, etc.)
+
+components/          # Custom React Components
 ```
 
-## Learning Resources
+## Tech Stack
 
 ### React
 - Used for: Building user interfaces and interactive components
 - Official React Docs: https://react.dev/learn
-- React Tutorial: https://react.dev/learn/tutorial-tic-tac-toe
 
 ### Next.js
 - Used for: React framework providing routing, server-side rendering, and optimizations
 - Official Next.js Docs: https://nextjs.org/docs
-- Learn Next.js: https://nextjs.org/learn
-- App Router Documentation: https://nextjs.org/docs/app
 
 ### Supabase
 - Used for: Authentication, database, and backend services
 - Official Supabase Docs: https://supabase.com/docs
-- Supabase with Next.js: https://supabase.com/docs/guides/getting-started/quickstarts/nextjs
-- Authentication Guide: https://supabase.com/docs/guides/auth
 
-### Vercel
-- Used for: Hosting and deploying Next.js applications
-- Vercel Documentation: https://vercel.com/docs
-- Deploying Next.js: https://nextjs.org/docs/app/building-your-application/deploying
-
-### Tailwind CSS
-- Used for: Styling components with utility-first CSS classes
-- Official Tailwind Docs: https://tailwindcss.com/docs
-- Tailwind with Next.js: https://tailwindcss.com/docs/guides/nextjs
-
-## Future Plans
-
-This repository is structured to eventually support two applications:
-- Landing/sign-up page (current)
-- Main PSC-AI web application (future)
-
-When ready to add the second app, the project can be restructured into a monorepo with both apps in an `apps/` directory.
+### Railway
+- Used for: Hosting and deploying
+- Official Railway Docs: https://docs.railway.com
