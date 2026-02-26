@@ -1,4 +1,4 @@
-/* Styling sheet for the SignUpForm, SuccessMessage, and ErrorMessage components */
+/* Styling sheet for the SignUpForm, SuccessMessage, ErrorMessage, and DuplicateEmailMessage components */
 
 /* Success Message */
 .successMessage {
@@ -35,7 +35,37 @@
   font-weight: 400;
 }
 
-/* Error Message */
+/* Duplicate Email Error Message */
+.duplicateEmailMessage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 12px 0;
+  animation: fadeIn 0.8s ease both;
+}
+
+.duplicateEmailIcon {
+  margin-bottom: 22px;
+}
+
+.duplicateEmailTitle {
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: -0.4px;
+  margin-bottom: 10px;
+}
+
+.duplicateEmailBody {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--text-muted);
+  line-height: 1.75;
+  max-width: 300px;
+  margin-bottom: 28px;
+}
+
+/* General Error Message */
 .errorMessage {
   display: flex;
   flex-direction: column;

@@ -16,7 +16,7 @@ export function SignUpForm({ signupEmail, setSignupEmail, roleOptions, selectedR
                     <div className="loop-role-row">
                     {roleOptions.map(({ label, value }) => (
                         <button type="button" key={value} className={`role-chip ${selectedRole === value ? `sel-${value}` : ''}`} onClick={() => setSelectedRole(value)}>
-                        {label}
+                          {label}
                         </button>
                     ))}
                     </div>
@@ -45,6 +45,24 @@ export function SuccessMessage({ signupEmail }) {
         <span className={styles.successEmail}>{signupEmail}</span> as we hit
         meaningful milestones.
       </p>
+    </div>
+  );
+}
+
+export function DuplicateEmailMessage({ signupEmail }) {
+  return (
+    <div className={styles.duplicateEmailMessage}>
+      <div className={styles.duplicateEmailIcon}>
+        <svg width="43" height="43" viewBox="0 0 43 43" role="img" aria-label="Warning alert">
+          <circle cx="21.5" cy="21.5" r="20" fill="#8B5CF6"/>
+          <rect x="19.5" y="11" width="4" height="17" rx="2" fill="#FFFFFF"/>
+          <circle cx="21.5" cy="32" r="2.7" fill="#FFFFFF"/>
+        </svg>
+      </div>
+
+      <p className={styles.duplicateEmailTitle}>Looks like {signupEmail} is already on the list!</p>
+
+      <p className={styles.duplicateEmailBody}>We'll be in touch soon.</p>
     </div>
   );
 }

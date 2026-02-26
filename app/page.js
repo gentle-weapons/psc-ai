@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { supabase } from './lib/supabaseClient';
 
 // Custom Components from '/components'
-import { SignUpForm, SuccessMessage, ErrorMessage } from '@/components/Forms';
+import { SignUpForm, SuccessMessage, ErrorMessage, DuplicateEmailMessage } from '@/components/Forms';
 import ArrowIcon from '@/components/ArrowIcon';
 import NavigationBar from '@/components/NavigationBar';
 import Footer from '@/components/Footer';
@@ -38,7 +38,7 @@ export default function LandingPage() {
   const [signupEmail, setSignupEmail] = useState('');
 
   // Status state, indicating the status of e-mail submission
-  const [status, setStatus] = useState(null) // null | 'success' | 'error'
+  const [status, setStatus] = useState(null) // null | 'success' | 'error' | 'duplicate'
 
   const consumerFeatures = [
     "Rate whether the agent completed your task, and how well it did",
@@ -66,22 +66,31 @@ export default function LandingPage() {
   // This function handles submitting the e-mail entered into the input form to the database.
   // Checks if email is present, valid, then sends to supabase
   const handleSignupSubmit = async (e) => {
+    // Prevent the browser from refreshing upon form submission
     e.preventDefault();
+
     if (!signupEmail) {
       setStatus('error');
       return;
     }
+
     try {
       const { error } = await supabase 
-        .from('emails') 
-          .insert([{ email: signupEmail, role: selectedRole }])
-      if (error) {
-        setStatus('error');
-      } else {
-      setStatus('success');
-      } 
+        .from("emails")
+        .insert([{ email: signupEmail, role: selectedRole }])
+
+        if (error) {
+          // 23505: duplicate key value violates unique constraint "emails_email_key"
+          if (error.code === "23505") {
+            setStatus("duplicate");
+          } else {
+            setStatus("error")
+          }
+        } else {
+          setStatus("success")
+        }
     } catch (error) {
-    setStatus('error')
+      setStatus("error")
     }
   };
 
@@ -182,9 +191,11 @@ export default function LandingPage() {
               />
             }
 
-            { status === 'success' && <SuccessMessage signupEmail={signupEmail} /> }
+            { status === "success" && <SuccessMessage signupEmail={signupEmail} /> }
 
-            { status === 'error' && <ErrorMessage onRetry={() => setStatus(null)} /> }
+            { status === "duplicate" && <DuplicateEmailMessage signupEmail={signupEmail} /> }
+
+            { status === "error" && <ErrorMessage onRetry={() => setStatus(null)} /> }
           </div>
         </div>
       </section>
