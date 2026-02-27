@@ -87,6 +87,13 @@
   background: var(--surface2);
 }
 
+/* reCAPTCHA wrapper */
+.captchaWrapper {
+  display: flex;
+  justify-content: center;
+  margin: 4px 0 2px;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
