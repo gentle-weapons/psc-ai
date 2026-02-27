@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { supabase } from './lib/supabaseClient';
+import { useState, useRef } from 'react';
+import { submitEmailAction } from './actions';
 
 // Custom Components from '/components'
 import { SignUpForm, SuccessMessage, ErrorMessage } from '@/components/Forms';
@@ -37,6 +37,10 @@ export default function LandingPage() {
   // Signup form state
   const [signupEmail, setSignupEmail] = useState('');
 
+  // reCAPTCHA v2 ref and token state
+  const recaptchaRef = useRef(null);
+  const [captchaToken, setCaptchaToken] = useState(null);
+
   // Status state, indicating the status of e-mail submission
   const [status, setStatus] = useState(null) // null | 'success' | 'error'
 
@@ -71,17 +75,21 @@ export default function LandingPage() {
       setStatus('error');
       return;
     }
+    if (!captchaToken) {
+      return;
+    }
     try {
-      const { error } = await supabase 
-        .from('emails') 
-          .insert([{ email: signupEmail, role: selectedRole }])
-      if (error) {
+      const response = await submitEmailAction(signupEmail, selectedRole, captchaToken);
+      if (response?.error) {
         setStatus('error');
-      } else {
-      setStatus('success');
-      } 
+      } else if (response?.success) {
+        setStatus('success');
+      }
     } catch (error) {
-    setStatus('error')
+      setStatus('error');
+    } finally {
+      recaptchaRef.current?.reset();
+      setCaptchaToken(null);
     }
   };
 
@@ -92,7 +100,7 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="hero">
         <div className="container">
-          <div className="hero-eyebrow"> <span className="eyebrow-dot"/>In development — follow along </div>
+          <div className="hero-eyebrow"> <span className="eyebrow-dot" />In development — follow along </div>
           <h1>Performance reviews<br />for your <em>AI workforce</em></h1>
           <p className="hero-sub">Combining real human feedback with hard quantitative data, ReviewMyAgent gives you a complete picture of how an AI agent actually performs.</p>
           <div className="hero-actions">
@@ -114,10 +122,10 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="audience-split">
-            <FeaturesCard 
-              type="consumer" 
-              tag="For Users & Businesses" 
-              title={<>Your experience<br />shapes the future</>} 
+            <FeaturesCard
+              type="consumer"
+              tag="For Users & Businesses"
+              title={<>Your experience<br />shapes the future</>}
               description="You use AI agents every day. Your feedback is the most valuable signal a developer can get. Now there's a structured way to give it."
               features={consumerFeatures}
             />
@@ -141,7 +149,7 @@ export default function LandingPage() {
           <div className="frameworks-label">Designed for popular agent frameworks</div>
           <div className="framework-pills">
             {/* .map here iterates over the objects in frameworks and creates 'frameworks.length' (4) framework pill elements */}
-            {frameworks.map(({name, color}) => (
+            {frameworks.map(({ name, color }) => (
               <div className="framework-pill" key={name}>
                 <div className="fp-dot" style={{ background: color }} />{name}
               </div>
@@ -171,20 +179,23 @@ export default function LandingPage() {
           </div>
 
           <div className="loop-panel">
-            { status === null &&
-              <SignUpForm 
-                signupEmail={signupEmail} 
-                setSignupEmail={setSignupEmail} 
-                roleOptions={roleOptions} 
+            {status === null &&
+              <SignUpForm
+                signupEmail={signupEmail}
+                setSignupEmail={setSignupEmail}
+                roleOptions={roleOptions}
                 selectedRole={selectedRole}
                 setSelectedRole={setSelectedRole}
                 handleSignupSubmit={handleSignupSubmit}
+                recaptchaRef={recaptchaRef}
+                captchaVerified={!!captchaToken}
+                onCaptchaChange={(token) => setCaptchaToken(token)}
               />
             }
 
-            { status === 'success' && <SuccessMessage signupEmail={signupEmail} /> }
+            {status === 'success' && <SuccessMessage signupEmail={signupEmail} />}
 
-            { status === 'error' && <ErrorMessage onRetry={() => setStatus(null)} /> }
+            {status === 'error' && <ErrorMessage onRetry={() => setStatus(null)} />}
           </div>
         </div>
       </section>
