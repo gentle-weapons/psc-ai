@@ -169,7 +169,7 @@ export default function LandingPage() {
       {/* Stay In The Loop */}
       <section className="loop-section" id="connect">
         <div className="container">
-          <div className="loop-header reveal">
+          <div className="loop-header">
             <div className="section-eyebrow">Stay involved</div>
             <div className="section-title">Follow the build & help shape the platform</div>
             <p>

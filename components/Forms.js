@@ -1,33 +1,37 @@
 import styles from '@/components/Forms.module.css'
 
+// This is the initial state of the sign up form. This is displayed to the user
+// when they first visit the site, and have not interacted with the form yet.
 export function SignUpForm({ signupEmail, setSignupEmail, roleOptions, selectedRole, setSelectedRole, handleSignupSubmit }) {
     return (
         <>
-            <div className="loop-panel-tag">📬 Get Updates</div>
+            <div className={styles.loopPanelTag}>📬 Get Updates</div>
             <h3>Stay in the loop</h3>
             <p>
             We'll send occasional updates as we hit milestones with meaningful 
             progress on what we're building and a heads up for major feature updates.
             </p>
-            <form onSubmit={handleSignupSubmit} className="loop-form">
-                <input className="loop-input" type="email" placeholder="your@email.com" value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)}/>
+            <form onSubmit={handleSignupSubmit} className={styles.loopForm}>
+                <input className={styles.loopInput} type="email" placeholder="your@email.com" value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)}/>
                 <div>
-                    <div className="chip-label">I am a...</div>
-                    <div className="loop-role-row">
+                    <div className={styles.chipLabel}>I am a...</div>
+                    <div className={styles.loopRoleRow}>
                     {roleOptions.map(({ label, value }) => (
-                        <button type="button" key={value} className={`role-chip ${selectedRole === value ? `sel-${value}` : ''}`} onClick={() => setSelectedRole(value)}>
-                          {label}
-                        </button>
+                      <button type="button" key={value} className={`${styles.roleChip} ${selectedRole === value ? styles[`sel${value}`] : ''}`} onClick={() => setSelectedRole(value)}>
+                        {label}
+                      </button>
                     ))}
                     </div>
                 </div>
-                <button type="submit" className="loop-btn">Notify me</button>
-                <div className="loop-note">No account needed. Unsubscribe any time.</div>
+                <button type="submit" className={styles.loopBtn}>Notify me</button>
+                <div className={styles.loopNote}>No account needed. Unsubscribe any time.</div>
             </form>
         </>
     )
 }
 
+// This component is displayed when the form successfully submits the user's
+// e-mail to the database through Supabase.
 export function SuccessMessage({ signupEmail }) {
   return (
     <div className={styles.successMessage}>
@@ -49,6 +53,8 @@ export function SuccessMessage({ signupEmail }) {
   );
 }
 
+// This component is displayed to the user when Supabase returns with error code '23505',
+// which indicates that the email is a duplicate in the table.
 export function DuplicateEmailMessage({ signupEmail }) {
   return (
     <div className={styles.duplicateEmailMessage}>
@@ -67,6 +73,7 @@ export function DuplicateEmailMessage({ signupEmail }) {
   );
 }
 
+// This component is displayed to handle any other general errors returned from Supabase.
 export function ErrorMessage({ onRetry }) {
   return (
     <div className={styles.errorMessage}>

@@ -1,6 +1,118 @@
 /* Styling sheet for the SignUpForm, SuccessMessage, ErrorMessage, and DuplicateEmailMessage components */
 
-/* Success Message */
+/* SignUpForm */
+.loopPanelTag {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 18px;
+}
+
+.loopForm { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px; 
+}
+
+.loopInput {
+  background: var(--surface2);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.loopInput::placeholder { 
+    color: var(--text-dim); 
+}
+
+.loopInput:focus { 
+    border-color: var(--accent); 
+}
+
+.chipLabel {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.loopRoleRow { 
+    display: flex; 
+    gap: 8px; 
+    flex-wrap: wrap; 
+}
+
+.roleChip {
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border-light);
+  background: transparent;
+  color: var(--text-dim);
+  transition: all 0.18s;
+}
+
+.roleChip:hover { 
+    color: var(--text-muted); 
+    border-color: var(--text-dim); 
+}
+
+.roleChip.seluser { 
+    background: var(--accent-dim); 
+    border-color: rgba(139, 92, 246, 0.35); 
+    color: var(--accent); 
+}
+
+.roleChip.seldeveloper { 
+    background: var(--amber-dim); 
+    border-color: rgba(245, 166, 35, 0.35); 
+    color: var(--amber); 
+}
+
+.roleChip.selboth { 
+    background: rgba(139, 92, 246, 0.06); 
+    border-color: rgba(139, 92, 246, 0.25); 
+    color: var(--text-muted); 
+}
+
+.loopBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 13px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.loopBtn:hover { 
+    opacity: 0.88; 
+    transform: translateY(-1px); 
+}
+
+.loopNote { 
+    font-size: 11px; 
+    color: var(--text-dim); 
+}
+
+/* SuccessMessage */
 .successMessage {
   display: flex;
   flex-direction: column;
@@ -35,7 +147,7 @@
   font-weight: 400;
 }
 
-/* Duplicate Email Error Message */
+/* DuplicateEmailMessage */
 .duplicateEmailMessage {
   display: flex;
   flex-direction: column;
@@ -65,7 +177,7 @@
   margin-bottom: 28px;
 }
 
-/* General Error Message */
+/* ErrorMessage */
 .errorMessage {
   display: flex;
   flex-direction: column;
