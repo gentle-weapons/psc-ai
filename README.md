@@ -1,6 +1,6 @@
 # Project Overview
 
-This is a pre-launch landing page for the `ReviewMyAgent` platform - [https://www.reviewmyagent.today](https://www.reviewmyagent.today)
+This is a pre-launch landing page for the PSC-AI platform - [https://www.reviewmyagent.today](https://www.reviewmyagent.today)
 
 ## Test The Project Locally
 
@@ -14,7 +14,7 @@ This is a pre-launch landing page for the `ReviewMyAgent` platform - [https://ww
 1. Clone the repository:
 
 ```bash
-   git clone -b initial-ui https://github.com/gentle-weapons/psc-ai.git
+   git clone https://github.com/gentle-weapons/psc-ai.git
    cd psc-ai
 ```
 
@@ -26,14 +26,15 @@ This is a pre-launch landing page for the `ReviewMyAgent` platform - [https://ww
 
 3. Add local environment variables:
 
-The fully deployed project uses the Supabase environment variables set in Railway.
+The fully deployed project uses Supabase and Google reCAPTCHA environment variables set in Railway.
 
 To test the project locally, you need to create a `.env.local` file, and set the following environment variables:
 
 - NEXT_PUBLIC_SUPABASE_URL
 - NEXT_PUBLIC_SUPABASE_ANON_KEY
+- NEXT_PUBLIC_RECAPTCHA_SITE_KEY
 
-You'll need a Supabase project. Once created, run the below SQL in the SQL Editor to set up the required table (unless using the actual team Supabase project). You can find your environment variable values under Project Settings → API.
+You'll need a Supabase project (unless using the actual team Supabase project). Once created, run the below SQL in the SQL Editor to set up the required table. You can find your environment variable values under Project Settings → API.
 
 The following database schema is used:
 
@@ -73,13 +74,13 @@ components/          # Custom React Components
 
 ## Tech Stack
 
-### React
-- Used for: Building user interfaces and interactive components
-- Official React Docs: https://react.dev/learn
-
 ### Next.js
 - Used for: React framework providing routing, server-side rendering, and optimizations
 - Official Next.js Docs: https://nextjs.org/docs
+
+### React
+- Used for: Building user interfaces and interactive components
+- Official React Docs: https://react.dev/learn
 
 ### Supabase
 - Used for: Authentication, database, and backend services
