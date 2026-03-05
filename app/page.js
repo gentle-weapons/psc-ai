@@ -9,6 +9,7 @@ import ArrowIcon from '@/components/ArrowIcon';
 import NavigationBar from '@/components/NavigationBar';
 import Footer from '@/components/Footer';
 import FeaturesCard from '@/components/FeaturesCard';
+import FeedbackForm from "@/components/FeedbackForm";
 
 export default function LandingPage() {
   // Track selected role for email signup form (`user` | `developer` | `both`)
@@ -31,8 +32,8 @@ export default function LandingPage() {
 
   // Feedback form state
   // NOT CURRENTLY IN USE (FEEDBACK IMPLEMENTED LATER)
-  const [feedback, setFeedback] = useState('');
-  const [feedbackEmail, setFeedbackEmail] = useState('');
+  //const [feedback, setFeedback] = useState('');
+  //const [feedbackEmail, setFeedbackEmail] = useState('');
 
   // Signup form state
   const [signupEmail, setSignupEmail] = useState('');
@@ -179,10 +180,16 @@ export default function LandingPage() {
                 selectedRole={selectedRole}
                 setSelectedRole={setSelectedRole}
                 handleSignupSubmit={handleSignupSubmit}
+                
               />
             }
 
-            { status === 'success' && <SuccessMessage signupEmail={signupEmail} /> }
+            {status === "success" && (
+              <>
+                <SuccessMessage signupEmail={signupEmail} />
+                <FeedbackForm signupEmail={signupEmail} />
+              </>
+            )}      
 
             { status === 'error' && <ErrorMessage onRetry={() => setStatus(null)} /> }
           </div>
