@@ -34,17 +34,17 @@ export function SignUpForm({ signupEmail, setSignupEmail, roleOptions, selectedR
 // e-mail to the database through Supabase.
 export function SuccessMessage({ signupEmail }) {
   return (
-    <div className={styles.successMessage}>
-      <div className={styles.successIcon}>
+    <div className={styles.message}>
+      <div className={styles.icon}>
         <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
           <circle cx="14" cy="14" r="14" fill="rgba(34, 197, 94, 0.1)" />
           <path d="M8.5 14.5l4 4 7-8" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </div>
 
-      <h3 className={styles.successTitle}>You're on the list</h3>
+      <h3 className={styles.title}>You're on the list</h3>
 
-      <p className={styles.successBody}>
+      <p className={styles.body}>
         We'll reach out to{" "}
         <span className={styles.successEmail}>{signupEmail}</span> as we hit
         meaningful milestones.
@@ -57,8 +57,8 @@ export function SuccessMessage({ signupEmail }) {
 // which indicates that the email is a duplicate in the table.
 export function DuplicateEmailMessage({ signupEmail }) {
   return (
-    <div className={styles.duplicateEmailMessage}>
-      <div className={styles.duplicateEmailIcon}>
+    <div className={styles.message}>
+      <div className={styles.icon}>
         <svg width="43" height="43" viewBox="0 0 43 43" role="img" aria-label="Warning alert">
           <circle cx="21.5" cy="21.5" r="20" fill="#8B5CF6"/>
           <rect x="19.5" y="11" width="4" height="17" rx="2" fill="#FFFFFF"/>
@@ -66,9 +66,9 @@ export function DuplicateEmailMessage({ signupEmail }) {
         </svg>
       </div>
 
-      <p className={styles.duplicateEmailTitle}>Looks like {signupEmail} is already on the list!</p>
+      <p className={styles.title}>Looks like {signupEmail} is already on the list!</p>
 
-      <p className={styles.duplicateEmailBody}>We'll be in touch soon.</p>
+      <p className={styles.body}>We'll be in touch soon.</p>
     </div>
   );
 }
@@ -76,17 +76,17 @@ export function DuplicateEmailMessage({ signupEmail }) {
 // This component is displayed to handle any other general errors returned from Supabase.
 export function ErrorMessage({ onRetry }) {
   return (
-    <div className={styles.errorMessage}>
-      <div className={styles.errorIcon}>
+    <div className={styles.message}>
+      <div className={styles.icon}>
         <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
           <circle cx="14" cy="14" r="14" fill="rgba(239, 68, 68, 0.1)" />
           <path d="M9.5 9.5l9 9M18.5 9.5l-9 9" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </div>
 
-      <h3 className={styles.errorTitle}>Something went wrong</h3>
+      <h3 className={styles.title}>Something went wrong</h3>
 
-      <p className={styles.errorBody}>We couldn't save your email this time. It's on our end, not yours. Please try again in a moment.</p>
+      <p className={styles.body}>We couldn't save your email this time. It's on our end, not yours. Please try again in a moment.</p>
 
       <button className={styles.errorRetryBtn} type="button" onClick={onRetry}>
         Try again

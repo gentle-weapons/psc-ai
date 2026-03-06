@@ -112,8 +112,8 @@
     color: var(--text-dim); 
 }
 
-/* SuccessMessage */
-.successMessage {
+/* Post Submission (Error/Success) Content Styling */
+.message {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -122,91 +122,33 @@
   animation: fadeIn 0.8s ease both;
 }
 
-.successIcon {
+.icon {
   margin-bottom: 22px;
 }
 
-.successTitle {
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.4px;
-  margin-bottom: 10px;
-}
-
-.successBody {
-  font-size: 14px;
-  font-weight: 300;
-  color: var(--text-muted);
-  line-height: 1.75;
-  max-width: 300px;
-  margin-bottom: 28px;
-}
-
-.successEmail {
-  color: var(--text);
-  font-weight: 400;
-}
-
-/* DuplicateEmailMessage */
-.duplicateEmailMessage {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 12px 0;
-  animation: fadeIn 0.8s ease both;
-}
-
-.duplicateEmailIcon {
-  margin-bottom: 22px;
-}
-
-.duplicateEmailTitle {
+.title {
   font-size: 20px;
   font-weight: 400;
   letter-spacing: -0.4px;
   margin-bottom: 10px;
 }
 
-.duplicateEmailBody {
+.body {
   font-size: 14px;
   font-weight: 300;
   color: var(--text-muted);
   line-height: 1.75;
   max-width: 300px;
   margin-bottom: 28px;
+}
+
+/* SuccessMessage */
+.successEmail {
+  color: var(--text);
+  font-weight: 400;
 }
 
 /* ErrorMessage */
-.errorMessage {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 12px 0;
-  animation: fadeIn 0.8s ease both;
-}
-
-.errorIcon {
-  margin-bottom: 22px;
-}
-
-.errorTitle {
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.4px;
-  margin-bottom: 10px;
-}
-
-.errorBody {
-  font-size: 14px;
-  font-weight: 300;
-  color: var(--text-muted);
-  line-height: 1.75;
-  max-width: 300px;
-  margin-bottom: 28px;
-}
-
 .errorRetryBtn {
   display: inline-flex;
   align-items: center;
