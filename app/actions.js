@@ -12,7 +12,7 @@ export async function submitEmailAction(email, role, captchaToken) {
         return { error: 'Missing required fields' };
     }
 
-    // 1. Verify reCAPTCHA token
+    // Verify reCAPTCHA token
     try {
         const googleVerifyUrl = `https://www.google.com/recaptcha/api/siteverify`;
         const response = await fetch(googleVerifyUrl, {
@@ -24,28 +24,24 @@ export async function submitEmailAction(email, role, captchaToken) {
         const data = await response.json();
 
         if (!data.success) {
-            console.error('reCAPTCHA validation failed:', data);
             return { error: 'Invalid CAPTCHA' };
         }
     } catch (error) {
-        console.error('Error verifying CAPTCHA:', error);
         return { error: 'Failed to verify CAPTCHA' };
     }
 
-    // 2. Insert into Supabase
+    // Insert into Supabase
     try {
         const { error } = await supabase
             .from('emails')
             .insert([{ email, role }]);
 
         if (error) {
-            console.error('Supabase error:', error);
             return { error: 'Failed to save email' };
         }
 
         return { success: true };
     } catch (error) {
-        console.error('Unexpected error:', error);
         return { error: 'Unexpected error occurred' };
     }
 }
