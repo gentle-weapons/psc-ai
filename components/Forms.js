@@ -1,33 +1,49 @@
 import styles from '@/components/Forms.module.css'
+import ReCAPTCHA from 'react-google-recaptcha'
 
-// This is the initial state of the sign up form. This is displayed to the user
-// when they first visit the site, and have not interacted with the form yet.
-export function SignUpForm({ signupEmail, setSignupEmail, roleOptions, selectedRole, setSelectedRole, handleSignupSubmit }) {
-    return (
-        <>
-            <div className={styles.loopPanelTag}>📬 Get Updates</div>
-            <h3>Stay in the loop</h3>
-            <p>
-            We'll send occasional updates as we hit milestones with meaningful 
-            progress on what we're building and a heads up for major feature updates.
-            </p>
-            <form onSubmit={handleSignupSubmit} className={styles.loopForm}>
-                <input className={styles.loopInput} type="email" placeholder="your@email.com" value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)}/>
-                <div>
-                    <div className={styles.chipLabel}>I am a...</div>
-                    <div className={styles.loopRoleRow}>
-                    {roleOptions.map(({ label, value }) => (
-                      <button type="button" key={value} className={`${styles.roleChip} ${selectedRole === value ? styles[`sel${value}`] : ''}`} onClick={() => setSelectedRole(value)}>
-                        {label}
-                      </button>
-                    ))}
-                    </div>
-                </div>
-                <button type="submit" className={styles.loopBtn}>Notify me</button>
-                <div className={styles.loopNote}>No account needed. Unsubscribe any time.</div>
-            </form>
-        </>
-    )
+const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+
+export function SignUpForm({ signupEmail, setSignupEmail, roleOptions, selectedRole, setSelectedRole, handleSignupSubmit, recaptchaRef, captchaVerified, onCaptchaChange }) {
+  return (
+    <>
+      <div className={styles.loopPanelTag}>📬 Get Updates</div>
+      <h3>Stay in the loop</h3>
+      <p>
+        We'll send occasional updates as we hit milestones with meaningful
+        progress on what we're building and a heads up for major feature updates.
+      </p>
+      <form onSubmit={handleSignupSubmit} className={styles.loopForm}>
+        <input className={styles.loopInput} type="email" placeholder="your@email.com" value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} />
+        <div>
+          <div className={styles.chipLabel}>I am a...</div>
+          <div className={styles.loopRoleRow}>
+            {roleOptions.map(({ label, value }) => (
+              <button type="button" key={value} className={`${styles.roleChip} ${selectedRole === value ? styles[`sel${value}`] : ''}`} onClick={() => setSelectedRole(value)}>
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className={styles.captchaWrapper}>
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            sitekey={RECAPTCHA_SITE_KEY}
+            theme="dark"
+            onChange={onCaptchaChange}
+          />
+        </div>
+        <button
+          type="submit"
+          className={styles.loopBtn}
+          disabled={!captchaVerified}
+          style={{ opacity: captchaVerified ? 1 : 0.45, cursor: captchaVerified ? 'pointer' : 'not-allowed' }}
+        >
+          Notify me
+        </button>
+        <div className={styles.loopNote}>No account needed. Unsubscribe any time.</div>
+      </form>
+    </>
+  )
 }
 
 // This component is displayed when the form successfully submits the user's
