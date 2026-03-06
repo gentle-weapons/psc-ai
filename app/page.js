@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { supabase } from './lib/supabaseClient';
+import { useState, useRef } from 'react';
+import { submitEmailAction } from './actions';
 
 // Custom Components from '/components'
 import { SignUpForm, SuccessMessage, ErrorMessage } from '@/components/Forms';
@@ -37,6 +37,10 @@ export default function LandingPage() {
   // Signup form state
   const [signupEmail, setSignupEmail] = useState('');
 
+  // reCAPTCHA v2 ref and token state
+  const recaptchaRef = useRef(null);
+  const [captchaToken, setCaptchaToken] = useState(null);
+
   // Status state, indicating the status of e-mail submission
   const [status, setStatus] = useState(null) // null | 'success' | 'error'
 
@@ -71,17 +75,21 @@ export default function LandingPage() {
       setStatus('error');
       return;
     }
+    if (!captchaToken) {
+      return;
+    }
     try {
-      const { error } = await supabase 
-        .from('emails') 
-          .insert([{ email: signupEmail, role: selectedRole }])
-      if (error) {
+      const response = await submitEmailAction(signupEmail, selectedRole, captchaToken);
+      if (response?.error) {
         setStatus('error');
-      } else {
-      setStatus('success');
-      } 
+      } else if (response?.success) {
+        setStatus('success');
+      }
     } catch (error) {
-    setStatus('error')
+      setStatus('error');
+    } finally {
+      recaptchaRef.current?.reset();
+      setCaptchaToken(null);
     }
   };
 
@@ -92,7 +100,7 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="hero">
         <div className="container">
-          <div className="hero-eyebrow"> <span className="eyebrow-dot"/>In development — follow along </div>
+          <div className="hero-eyebrow"> <span className="eyebrow-dot" />In development — follow along </div>
           <h1>Performance reviews<br />for your <em>AI workforce</em></h1>
           <p className="hero-sub">Combining real human feedback with hard quantitative data, ReviewMyAgent gives you a complete picture of how an AI agent actually performs.</p>
           <div className="hero-actions">
@@ -114,10 +122,10 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="audience-split">
-            <FeaturesCard 
-              type="consumer" 
-              tag="For Users & Businesses" 
-              title={<>Your experience<br />shapes the future</>} 
+            <FeaturesCard
+              type="consumer"
+              tag="For Users & Businesses"
+              title={<>Your experience<br />shapes the future</>}
               description="You use AI agents every day. Your feedback is the most valuable signal a developer can get. Now there's a structured way to give it."
               features={consumerFeatures}
             />
@@ -135,13 +143,73 @@ export default function LandingPage() {
 
       <div className="section-divider" />
 
+      {/* Why Section */}
+      <section className="section why-section" id="why">
+        <div className="container">
+          <div style={{ textAlign: 'center', maxWidth: '620px', margin: '0 auto 56px' }}>
+            <div className="section-eyebrow">Why ReviewMyAgent?</div>
+            <div className="section-title">
+              Because agents deserve the same<br />accountability as any teammate
+            </div>
+            <p className="why-subtitle">
+              AI agents are making real decisions in real workflows. Yet there's no
+              structured way to evaluate them. We're changing that.
+            </p>
+          </div>
+
+          <div className="why-grid">
+            <div className="why-card">
+              <div className="why-card-icon">🔗</div>
+              <h3>Feedback meets data</h3>
+              <p>
+                Most platforms track either human opinions or machine metrics — never both.
+                ReviewMyAgent connects real user satisfaction scores to execution traces,
+                token costs, and tool-call logs in one place.
+              </p>
+            </div>
+
+            <div className="why-card">
+              <div className="why-card-icon">⚙️</div>
+              <h3>Framework-agnostic</h3>
+              <p>
+                LangChain, CrewAI, AutoGen, OpenAI Swarm — it doesn't matter how you built
+                your agent. ReviewMyAgent works with any framework so you can compare
+                performance across your entire stack.
+              </p>
+            </div>
+
+            <div className="why-card">
+              <div className="why-card-icon">🛡️</div>
+              <h3>Trust through transparency</h3>
+              <p>
+                Users browse reviews before integrating an agent into their workflow.
+                Developers earn credibility by shipping agents with a public track record
+                of real-world performance.
+              </p>
+            </div>
+
+            <div className="why-card">
+              <div className="why-card-icon">🧭</div>
+              <h3>Shaped by the community</h3>
+              <p>
+                This isn't built in a vacuum. Every feature is informed by real users
+                and builders. Sign up, share your pain points, and help shape how
+                the world evaluates AI.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="section-divider" />
+
       {/* Integrated Frameworks */}
       <div className="frameworks">
         <div className="container">
           <div className="frameworks-label">Designed for popular agent frameworks</div>
           <div className="framework-pills">
             {/* .map here iterates over the objects in frameworks and creates 'frameworks.length' (4) framework pill elements */}
-            {frameworks.map(({name, color}) => (
+            {frameworks.map(({ name, color }) => (
               <div className="framework-pill" key={name}>
                 <div className="fp-dot" style={{ background: color }} />{name}
               </div>
@@ -171,20 +239,23 @@ export default function LandingPage() {
           </div>
 
           <div className="loop-panel">
-            { status === null &&
-              <SignUpForm 
-                signupEmail={signupEmail} 
-                setSignupEmail={setSignupEmail} 
-                roleOptions={roleOptions} 
+            {status === null &&
+              <SignUpForm
+                signupEmail={signupEmail}
+                setSignupEmail={setSignupEmail}
+                roleOptions={roleOptions}
                 selectedRole={selectedRole}
                 setSelectedRole={setSelectedRole}
                 handleSignupSubmit={handleSignupSubmit}
+                recaptchaRef={recaptchaRef}
+                captchaVerified={!!captchaToken}
+                onCaptchaChange={(token) => setCaptchaToken(token)}
               />
             }
 
-            { status === 'success' && <SuccessMessage signupEmail={signupEmail} /> }
+            {status === 'success' && <SuccessMessage signupEmail={signupEmail} />}
 
-            { status === 'error' && <ErrorMessage onRetry={() => setStatus(null)} /> }
+            {status === 'error' && <ErrorMessage onRetry={() => setStatus(null)} />}
           </div>
         </div>
       </section>
