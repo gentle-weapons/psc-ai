@@ -4,7 +4,7 @@ import { useState, useRef } from 'react';
 import { submitEmailAction } from './actions';
 
 // Custom Components from '/components'
-import { SignUpForm, SuccessMessage, ErrorMessage } from '@/components/Forms';
+import { SignUpForm, SuccessMessage, ErrorMessage, DuplicateEmailMessage } from '@/components/Forms';
 import ArrowIcon from '@/components/ArrowIcon';
 import NavigationBar from '@/components/NavigationBar';
 import Footer from '@/components/Footer';
@@ -42,7 +42,7 @@ export default function LandingPage() {
   const [captchaToken, setCaptchaToken] = useState(null);
 
   // Status state, indicating the status of e-mail submission
-  const [status, setStatus] = useState(null) // null | 'success' | 'error'
+  const [status, setStatus] = useState(null) // null | 'success' | 'error' | 'duplicate'
 
   const consumerFeatures = [
     "Rate whether the agent completed your task, and how well it did",
@@ -70,7 +70,9 @@ export default function LandingPage() {
   // This function handles submitting the e-mail entered into the input form to the database.
   // Checks if email is present, valid, then sends to supabase
   const handleSignupSubmit = async (e) => {
+    // Prevent the browser from refreshing upon form submission
     e.preventDefault();
+
     if (!signupEmail) {
       setStatus('error');
       return;
@@ -80,10 +82,13 @@ export default function LandingPage() {
     }
     try {
       const response = await submitEmailAction(signupEmail, selectedRole, captchaToken);
-      if (response?.error) {
+
+      if (response?.error === "Duplicate email already in database") {
+        setStatus('duplicate');
+      } else if (response?.error === "Failed to save email") {
         setStatus('error');
-      } else if (response?.success) {
-        setStatus('success');
+      } else {
+        setStatus('success')
       }
     } catch (error) {
       setStatus('error');
@@ -228,7 +233,7 @@ export default function LandingPage() {
       {/* Stay In The Loop */}
       <section className="loop-section" id="connect">
         <div className="container">
-          <div className="loop-header reveal">
+          <div className="loop-header">
             <div className="section-eyebrow">Stay involved</div>
             <div className="section-title">Follow the build & help shape the platform</div>
             <p>
@@ -253,9 +258,11 @@ export default function LandingPage() {
               />
             }
 
-            {status === 'success' && <SuccessMessage signupEmail={signupEmail} />}
+            { status === "success" && <SuccessMessage signupEmail={signupEmail} /> }
 
-            {status === 'error' && <ErrorMessage onRetry={() => setStatus(null)} />}
+            { status === "duplicate" && <DuplicateEmailMessage signupEmail={signupEmail} /> }
+
+            { status === "error" && <ErrorMessage onRetry={() => setStatus(null)} /> }
           </div>
         </div>
       </section>

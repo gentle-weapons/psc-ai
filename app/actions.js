@@ -1,6 +1,6 @@
-'use server';
+"use server";
 
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -9,39 +9,41 @@ const supabase = createClient(
 
 export async function submitEmailAction(email, role, captchaToken) {
     if (!email || !captchaToken) {
-        return { error: 'Missing required fields' };
+        return { error: "Missing required fields" };
     }
 
     // Verify reCAPTCHA token
     try {
-        const googleVerifyUrl = `https://www.google.com/recaptcha/api/siteverify`;
+        const googleVerifyUrl = "https://www.google.com/recaptcha/api/siteverify";
         const response = await fetch(googleVerifyUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: `secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${captchaToken}`,
         });
 
         const data = await response.json();
 
         if (!data.success) {
-            return { error: 'Invalid CAPTCHA' };
+            return { error: "Invalid CAPTCHA" };
         }
     } catch (error) {
-        return { error: 'Failed to verify CAPTCHA' };
+        return { error: "Failed to verify CAPTCHA" };
     }
 
     // Insert into Supabase
     try {
         const { error } = await supabase
-            .from('emails')
+            .from("emails")
             .insert([{ email, role }]);
 
-        if (error) {
-            return { error: 'Failed to save email' };
+        if (error?.code === "23505") {
+            return { error: "Duplicate email already in database" };
+        } else if (error) {
+            return { error: "Failed to save email" };
         }
 
         return { success: true };
     } catch (error) {
-        return { error: 'Unexpected error occurred' };
+        return { error: "Unexpected error occurred" };
     }
 }
