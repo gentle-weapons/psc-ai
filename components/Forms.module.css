@@ -1,7 +1,119 @@
-/* Styling sheet for the SignUpForm, SuccessMessage, and ErrorMessage components */
+/* Styling sheet for the SignUpForm, SuccessMessage, ErrorMessage, and DuplicateEmailMessage */
 
-/* Success Message */
-.successMessage {
+/* SignUpForm */
+.loopPanelTag {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 18px;
+}
+
+.loopForm { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px; 
+}
+
+.loopInput {
+  background: var(--surface2);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.loopInput::placeholder { 
+    color: var(--text-dim); 
+}
+
+.loopInput:focus { 
+    border-color: var(--accent); 
+}
+
+.chipLabel {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.loopRoleRow { 
+    display: flex; 
+    gap: 8px; 
+    flex-wrap: wrap; 
+}
+
+.roleChip {
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border-light);
+  background: transparent;
+  color: var(--text-dim);
+  transition: all 0.18s;
+}
+
+.roleChip:hover { 
+    color: var(--text-muted); 
+    border-color: var(--text-dim); 
+}
+
+.roleChip.seluser { 
+    background: var(--accent-dim); 
+    border-color: rgba(139, 92, 246, 0.35); 
+    color: var(--accent); 
+}
+
+.roleChip.seldeveloper { 
+    background: var(--amber-dim); 
+    border-color: rgba(245, 166, 35, 0.35); 
+    color: var(--amber); 
+}
+
+.roleChip.selboth { 
+    background: rgba(139, 92, 246, 0.06); 
+    border-color: rgba(139, 92, 246, 0.25); 
+    color: var(--text-muted); 
+}
+
+.loopBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 13px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.loopBtn:hover { 
+    opacity: 0.88; 
+    transform: translateY(-1px); 
+}
+
+.loopNote { 
+    font-size: 11px; 
+    color: var(--text-dim); 
+}
+
+/* Post Submission (Error/Success) Content Styling */
+.message {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -10,18 +122,18 @@
   animation: fadeIn 0.8s ease both;
 }
 
-.successIcon {
+.icon {
   margin-bottom: 22px;
 }
 
-.successTitle {
-  font-size: 22px;
-  font-weight: 700;
+.title {
+  font-size: 20px;
+  font-weight: 400;
   letter-spacing: -0.4px;
   margin-bottom: 10px;
 }
 
-.successBody {
+.body {
   font-size: 14px;
   font-weight: 300;
   color: var(--text-muted);
@@ -30,41 +142,13 @@
   margin-bottom: 28px;
 }
 
+/* SuccessMessage */
 .successEmail {
   color: var(--text);
   font-weight: 400;
 }
 
-/* Error Message */
-.errorMessage {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 12px 0;
-  animation: fadeIn 0.8s ease both;
-}
-
-.errorIcon {
-  margin-bottom: 22px;
-}
-
-.errorTitle {
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.4px;
-  margin-bottom: 10px;
-}
-
-.errorBody {
-  font-size: 14px;
-  font-weight: 300;
-  color: var(--text-muted);
-  line-height: 1.75;
-  max-width: 300px;
-  margin-bottom: 28px;
-}
-
+/* ErrorMessage */
 .errorRetryBtn {
   display: inline-flex;
   align-items: center;
@@ -87,7 +171,20 @@
   background: var(--surface2);
 }
 
+.captchaWrapper {
+  display: flex;
+  justify-content: center;
+  margin: 4px 0 2px;
+}
+
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
