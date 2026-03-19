@@ -66,7 +66,7 @@ export default function FeedbackForm({ signupEmail }) {
         />
 
         <input
-          className="loop-input"
+          className="suggest-input"
           type="email"
           placeholder="Email (optional — only if you'd like a reply)"
           value={feedbackEmail}
