@@ -253,6 +253,9 @@ export default function LandingPage() {
                 selectedRole={selectedRole}
                 setSelectedRole={setSelectedRole}
                 handleSignupSubmit={handleSignupSubmit}
+                recaptchaRef={recaptchaRef}
+                captchaVerified={!!captchaToken}
+                onCaptchaChange={(token) => setCaptchaToken(token)}
                 
               />
             }
@@ -263,14 +266,7 @@ export default function LandingPage() {
                 <FeedbackForm signupEmail={signupEmail} />
               </>
             )}      
-                recaptchaRef={recaptchaRef}
-                captchaVerified={!!captchaToken}
-                onCaptchaChange={(token) => setCaptchaToken(token)}
-              />
-            }
-
-            { status === "success" && <SuccessMessage signupEmail={signupEmail} /> }
-
+            
             { status === "duplicate" && <DuplicateEmailMessage signupEmail={signupEmail} /> }
 
             { status === "error" && <ErrorMessage onRetry={() => setStatus(null)} /> }
