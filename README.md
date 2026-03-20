@@ -1,6 +1,10 @@
 # Project Overview
 
-This is a pre-launch landing page for the PSC-AI platform - [https://www.reviewmyagent.today](https://www.reviewmyagent.today)
+This is the monorepo for the PSC-AI platform - [https://www.reviewmyagent.today](https://www.reviewmyagent.today)
+
+It contains two apps:
+- **landing** — pre-launch sign-up page
+- **platform** — the main PSC-AI platform (in development)
 
 ## Test The Project Locally
 
@@ -12,23 +16,21 @@ This is a pre-launch landing page for the PSC-AI platform - [https://www.reviewm
 ### Installation
 
 1. Clone the repository:
-
 ```bash
-   git clone https://github.com/gentle-weapons/psc-ai.git
-   cd psc-ai
+git clone https://github.com/gentle-weapons/psc-ai.git
+cd psc-ai
 ```
 
-2. Install dependencies:
-
+2. Install dependencies from the repo root:
 ```bash
-   npm install
+npm install
 ```
 
 3. Add local environment variables:
 
 The fully deployed project uses Supabase and Google reCAPTCHA environment variables set in Railway.
 
-To test the project locally, you need to create a `.env.local` file, and set the following environment variables:
+To test the landing app locally, create a `.env.local` file inside `apps/landing/` and set the following environment variables:
 
 - NEXT_PUBLIC_SUPABASE_URL
 - NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -37,7 +39,6 @@ To test the project locally, you need to create a `.env.local` file, and set the
 You'll need a Supabase project (unless using the actual team Supabase project). Once created, run the below SQL in the SQL Editor to set up the required table. You can find your environment variable values under Project Settings → API.
 
 The following database schema is used:
-
 ```sql
 CREATE TABLE public.emails (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -49,30 +50,48 @@ CREATE TABLE public.emails (
 );
 ```
 
-4. Start the development server:
-
+4. Start the development servers:
 ```bash
-   npm run dev
+npx turbo dev
 ```
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+This runs both apps in parallel:
+- Landing → [http://localhost:3000](http://localhost:3000)
+- Platform → [http://localhost:3001](http://localhost:3001)
+
+To run a single app:
+```bash
+npx turbo dev --filter=@psc-ai/landing
+npx turbo dev --filter=@psc-ai/platform
+```
 
 ## Directory Structure
-
 ```
-app/
-├── page.js          # Home page (/)
-├── layout.js        # Root layout (wraps all pages)
-├── globals.css      # Global styles
-└── [route]/
-    └── page.js      # Additional pages (/route)
+apps/
+├── landing/                 # Pre-launch sign-up page
+│   ├── app/
+│   │   ├── page.js          # Home page (/)
+│   │   ├── layout.js        # Root layout (wraps all pages)
+│   │   ├── globals.css      # Global styles
+│   │   └── [route]/
+│   │       └── page.js      # Additional pages (/route)
+│   ├── components/          # Custom React components
+│   └── public/              # Static files (images, etc.)
+│
+└── platform/                # Main PSC-AI platform (in development)
+    ├── app/
+    ├── components/
+    └── public/
 
-public/              # Static files (images, etc.)
-
-components/          # Custom React Components
+turbo.json                   # Turborepo task configuration
+package.json                 # Root package.json (workspaces)
 ```
 
 ## Tech Stack
+
+### Turborepo
+- Used for: Monorepo task orchestration and caching
+- Official Turborepo Docs: https://turbo.build/repo/docs
 
 ### Next.js
 - Used for: React framework providing routing, server-side rendering, and optimizations
