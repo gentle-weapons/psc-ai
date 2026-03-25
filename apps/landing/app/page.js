@@ -140,7 +140,7 @@ export default function LandingPage() {
               type="developer"
               tag="For Developers & Builders"
               title={<>Metrics that tell<br />the whole story</>}
-              description="Surface-level evals aren't enough. Correlated with real user satisfaction, see exactly how your agents run.."
+              description="Surface-level evals aren't enough. Correlated with real user satisfaction and experience, see exactly how agents perform."
               features={developerFeatures}
             />
           </div>
