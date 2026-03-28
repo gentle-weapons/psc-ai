@@ -19,13 +19,11 @@ export default function PrivacyPolicy() {
   return (
     <div className="min-h-screen bg-[#0D0D0D] text-[#e8eaed]">
 
-      {/* Nav */}
       <NavigationBar />
 
       {/* Page layout */}
       <div className="max-w-[1100px] mx-auto px-8 pt-20 pb-32 grid grid-cols-[220px_1fr] gap-16 items-start max-md:grid-cols-1 max-md:gap-8">
 
-        {/* TOC */}
         <aside className="sticky top-20 hidden md:block">
           <p className="text-[11px] font-medium text-[#7a8394] tracking-widest uppercase mb-4">
             On this page

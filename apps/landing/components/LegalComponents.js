@@ -49,7 +49,7 @@ export function ContactCard() {
   );
 }
 
-export function DocSection({ id, num, title, children }) {
+export function DocSection({ id, title, children }) {
   return (
     <section id={id} className="mb-12 scroll-mt-20">
       <h2 className="text-[22px] font-normal text-[#e8eaed] mb-4 flex items-center gap-3">
@@ -65,5 +65,15 @@ export function BodyText({ children }) {
     <p className="text-[14.5px] text-[#b0b8c8] font-light leading-relaxed mb-3">
       {children}
     </p>
+  );
+}
+
+export function Callout({ children }) {
+  return (
+    <div className="bg-yellow-500/5 border border-yellow-500/20 rounded-lg px-5 py-4 my-3">
+      <p className="text-[13px] text-yellow-200/70 font-normal leading-relaxed tracking-wide m-0">
+        {children}
+      </p>
+    </div>
   );
 }
