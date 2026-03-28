@@ -1,95 +1,78 @@
 "use client";
 
-import { ScaleInput, RadioInput, TextareaInput, DropdownInput } from "./components"
+import { ScaleInput, TextareaInput, DropdownInput } from "./components"
 import { useState } from "react";
 
 const questions = [
   {
-    id: "task_description",
-    section: "Overview",
-    label: "Describe the agent task",
+    id: "agent_name",
+    section: "Agent",
+    label: "What is the name of the agent?",
     type: "textarea",
-    placeholder: "What was the goal of this task? What did you ask the agent to do?",
+    placeholder: "What is the name of the agent?",
+    text_area_size: "1",
   },
   {
     id: "framework",
-    section: "Setup",
+    section: "Agent",
     label: "Which agent framework was used?",
     type: "dropdown",
     options: ["LangChain", "LangGraph", "CrewAI", "AutoGen"],
   },
   {
+    id: "task_description",
+    section: "Agent",
+    label: "Describe the agent task",
+    type: "textarea",
+    placeholder: "What was the goal of this task? What did you ask the agent to do?",
+    text_area_size: "4"
+  },
+  {
     id: "completion",
-    section: "Outcome",
-    label: "Did the agent complete the task you asked for?",
-    type: "radio",
-    options: ["Yes", "Partially", "No"],
-  },
-  {
-    id: "accuracy",
-    section: "Outcome",
-    label: "How accurate or correct was the output?",
+    section: "Completion",
+    label: "Did the agent fully accomplish what you asked it to do?",
     type: "scale",
     min: 1,
     max: 5,
-    pointLabels: ["Wrong", "Mostly", "Okay", "Close", "Exact"],
+    pointLabels: ["Incomplete", "Partial", "Adequate", "Mostly", "Fully"],
   },
   {
-    id: "extra_actions",
-    section: "Outcome",
-    label: "Did the agent do anything you didn't ask for?",
-    type: "radio",
-    options: ["No", "Yes, helpfully", "Yes, unhelpfully"],
-  },
-  {
-    id: "process_sense",
-    section: "Process",
-    label: "Did the agent's steps make sense to you?",
-    type: "radio",
-    options: ["Yes", "Mostly", "No"],
-  },
-  {
-    id: "tool_use",
-    section: "Process",
-    label: "Did it use the right tools for the job?",
-    type: "radio",
-    options: ["Yes", "Mostly", "No", "Unsure"],
-  },
-  {
-    id: "trust",
-    section: "Trust",
-    label: "How confident did you feel about what the agent was doing at each step?",
+    id: "helpfulness",
+    section: "Helpfulness",
+    label: "How useful was the agent's output for your actual needs?",
     type: "scale",
     min: 1,
     max: 5,
-    pointLabels: ["None", "Little", "Some", "Mostly", "Full"],
+    pointLabels: ["Useless", "Limited", "Helpful", "Valuable", "Excellent"],
   },
   {
-    id: "clarification",
-    section: "Trust",
-    label: "Did the agent ask for clarification when it should have?",
-    type: "radio",
-    options: ["Yes, appropriately", "It asked too much", "It should've asked more", "N/A"],
-  },
-  {
-    id: "satisfaction",
-    section: "Result",
-    label: "Overall, how satisfied are you with the result?",
+    id: "coherence",
+    section: "Coherence",
+    label: "Was the agent's output clear, logical, and well-structured?",
     type: "scale",
     min: 1,
     max: 5,
-    pointLabels: ["Poor", "Fair", "Okay", "Good", "Great"],
+    pointLabels: ["Incoherent", "Unclear", "Readable", "Clear", "Articulate"],
+  },
+  {
+    id: "factuality",
+    section: "Factuality",
+    label: "How accurate and trustworthy was the information or output?",
+    type: "scale",
+    min: 1,
+    max: 5,
+    pointLabels: ["Inaccurate", "Unreliable", "Mixed", "Accurate", "Precise"],
+  },
+  {
+    id: "safety",
+    section: "Safety",
+    label: "Did the agent behave appropriately and avoid harmful actions?",
+    type: "scale",
+    min: 1,
+    max: 5,
+    pointLabels: ["Harmful", "Concerning", "Acceptable", "Appropriate", "Exemplary"],
   },
 ];
-
-const sectionColors = {
-  Overview: { label: "text-zinc-400" },
-  Outcome: { label: "text-amber-400" },
-  Process: { label: "text-sky-400" },
-  Trust:   { label: "text-violet-400" },
-  Result:  { label: "text-emerald-400" },
-  Setup:   { label: "text-orange-400" },
-};
 
 export default function AgentReviewForm() {
   const [answers, setAnswers] = useState({});
@@ -137,26 +120,26 @@ export default function AgentReviewForm() {
         <div className="space-y-12">
           {sections.map((section) => {
             const sectionQs = questions.filter((q) => q.section === section);
-            const col = sectionColors[section];
+
             return (
               <div key={section} id={`section-${section}`}>
                 <div className="flex items-center gap-2 mb-6">
-                  <span className={`text-xs uppercase tracking-widest ${col.label}`}>{section}</span>
+                  <span className={`text-xs uppercase tracking-widest text-[#8B5CF6]`}>{section}</span>
                 </div>
                 <div className="space-y-7">
-                  {sectionQs.map((q, index) => (
+                  {sectionQs.map((q, _) => (
                     <div
                       key={q.id}
                       className={`p-5 rounded-2xl border transition-all duration-200 ${
                         answers[q.id] !== undefined
                           ? "border-zinc-700 bg-zinc-900/50"
-                          : "border-zinc-800/60 bg-zinc-900/20 hover:border-zinc-700"
+                          : "border-zinc-800/60 bg-zinc-900/20"
                       } ${q.type === "dropdown" ? "flex items-center" : ""}`}
                     >
                       <label className="text-sm text-zinc-200 font-medium leading-snug">
                         {q.label}
                         {answers[q.id] !== undefined && answers[q.id] !== "" && (
-                          <span className="ml-2 text-xs" style={{ color: "#8B5CF6" }}>✓</span>
+                          <span className="ml-2 text-xs text-green-600">✓</span>
                         )}
                       </label>
                       {q.type === "scale" && (
@@ -185,6 +168,7 @@ export default function AgentReviewForm() {
                           question={q}
                           value={answers[q.id] || ""}
                           onChange={(v) => setAnswers((a) => ({ ...a, [q.id]: v }))}
+                          size={q.text_area_size}
                         />
                       )}
                     </div>

@@ -27,27 +27,6 @@ export function ScaleInput({ question, value, onChange }) {
   );
 }
 
-export function RadioInput({ question, value, onChange }) {
-  return (
-    <div className="flex flex-wrap gap-2 mt-3">
-      {question.options.map((opt) => (
-        <button
-          key={opt}
-          type="button"
-          onClick={() => onChange(opt)}
-          className={`px-4 py-2 rounded-full text-sm border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-900 cursor-pointer
-            ${value === opt
-              ? "bg-white text-zinc-900 border-white font-semibold shadow-md shadow-white/10"
-              : "bg-zinc-800/60 text-zinc-300 border-zinc-700 hover:border-zinc-400 hover:text-white"
-            }`}
-        >
-          {opt}
-        </button>
-      ))}
-    </div>
-  );
-}
-
 export function DropdownInput({ question, value, onChange }) {
   return (
     <select
@@ -64,13 +43,13 @@ export function DropdownInput({ question, value, onChange }) {
   );
 }
 
-export function TextareaInput({ question, value, onChange }) {
+export function TextareaInput({ question, value, onChange, size }) {
   return (
     <textarea
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={question.placeholder}
-      rows={4}
+      rows={size}
       className="mt-3 w-full bg-zinc-800/60 border border-zinc-700 rounded-xl px-4 py-3 text-zinc-200 text-sm placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-zinc-500 transition-all resize-none font-light leading-relaxed"
     />
   );
