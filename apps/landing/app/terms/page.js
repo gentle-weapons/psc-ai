@@ -82,7 +82,7 @@ export default function TermsOfService() {
             <DocSection id="s3" title="What You're Agreeing To">
               <BodyText>By submitting the waitlist form, you agree to:</BodyText>
               <BulletList items={[
-                "Receive email communications from Gentle Systmes related to the ReviewMyAgent launch and product updates",
+                "Receive email communications from Gentle Systems related to the ReviewMyAgent launch and product updates",
                 "Allow us to use your submitted feedback and comments to inform product development",
                 "Our Privacy Policy, which is incorporated into these Terms by reference",
               ]} />
