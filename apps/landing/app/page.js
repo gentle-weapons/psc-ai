@@ -22,19 +22,6 @@ export default function LandingPage() {
     { label: 'Both', value: 'both' },
   ];
 
-  // Track selected category for feedback form (`Pain point` | `Feature idea` | `Use case` | `Other`)
-  // NOT CURRENTLY IN USE (FEEDBACK IMPLEMENTED LATER)
-  const [selectedCategory, setSelectedCategory] = useState('Pain point');
-
-  // Category options displayed in the "Tell us what you need" section
-  // NOT CURRENTLY IN USE (FEEDBACK IMPLEMENTED LATER)
-  const categories = ['Pain point', 'Feature idea', 'Use case', 'Other'];
-
-  // Feedback form state
-  // NOT CURRENTLY IN USE (FEEDBACK IMPLEMENTED LATER)
-  //const [feedback, setFeedback] = useState('');
-  //const [feedbackEmail, setFeedbackEmail] = useState('');
-
   // Signup form state
   const [signupEmail, setSignupEmail] = useState('');
 
@@ -108,10 +95,10 @@ export default function LandingPage() {
         <div className="container">
           <div className="hero-eyebrow"> <span className="eyebrow-dot" />In development — follow along </div>
           <h1>Performance reviews<br />for your <em>AI workforce</em></h1>
-          <p className="hero-sub">Combining real human feedback with hard quantitative data, ReviewMyAgent gives you a complete picture of how an AI agent actually performs.</p>
+          <p className="hero-sub">Combining real human feedback with hard quantitative data, ReviewMyAgent gives you a complete picture of how your agent actually performs.</p>
           <div className="hero-actions">
             <a href="#connect" className="btn-primary">Get updates<ArrowIcon /></a>
-            <a href="#audiences" className="btn-secondary">Learn more</a>
+            <a href="#features" className="btn-secondary">Learn more</a>
           </div>
         </div>
       </section>
@@ -238,9 +225,8 @@ export default function LandingPage() {
             <div className="section-eyebrow">Stay involved</div>
             <div className="section-title">Follow the build & help shape the platform</div>
             <p>
-              ReviewMyAgent is actively in development. Sign up for occasional progress
-              updates, or share your pain points and ideas — we're building this with
-              real users in mind.
+              ReviewMyAgent is in active development and things may change before launch. Sign up for occasional 
+              progress updates, or share your pain points and ideas — we're building this with real users in mind.
             </p>
           </div>
 

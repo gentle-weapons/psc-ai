@@ -39,11 +39,11 @@ export function ContactCard() {
       <p className="text-[14px] font-medium text-[#e8eaed]">Gentle Systems</p>
       <p className="text-[14px] font-light text-[#7a8394]">
         Email:{" "}
-        <a href="mailto:pscagent78@gmail.com" className="text-violet-400 hover:underline">pscagent78@gmail.com</a>
+        <a href="mailto:contact@reviewmyagent.today" className="text-violet-400 hover:underline">contact@reviewmyagent.today</a>
       </p>
       <p className="text-[14px] font-light text-[#7a8394]">
         Website:{" "}
-        <a href="#" className="text-violet-400 hover:underline">reviewmyagent.today</a>
+        <a href="http://reviewmyagent.today" className="text-violet-400 hover:underline">reviewmyagent.today</a>
       </p>
     </div>
   );

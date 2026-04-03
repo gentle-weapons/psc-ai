@@ -113,8 +113,8 @@ export default function PrivacyPolicy() {
               ]} />
               <BodyText>
                 To exercise any of these rights, please contact us at{" "}
-                <a href="mailto:pscagent78@gmail.com" className="text-violet-400 hover:underline">
-                  pscagent78@gmail.com
+                <a href="mailto:contact@reviewmyagent.today" className="text-violet-400 hover:underline">
+                  contact@reviewmyagent.today
                 </a>
                 . We will respond within 30 days.
               </BodyText>
