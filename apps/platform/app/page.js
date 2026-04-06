@@ -1,8 +1,70 @@
 'use client';
 
+import { useState, useEffect, useRef, useCallback } from 'react';
 import useScrollFade from './hooks/useScrollFade';
 
 export default function PlatformPage() {
+  const [showSignUp, setShowSignUp] = useState(false);
+  const [captchaVerified, setCaptchaVerified] = useState(false);
+  const recaptchaRef = useRef(null);
+
+  // Google reCAPTCHA test site key (always passes in dev)
+  const RECAPTCHA_SITE_KEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
+
+  // Load reCAPTCHA script and render widget when modal opens
+  useEffect(() => {
+    if (!showSignUp) {
+      setCaptchaVerified(false);
+      return;
+    }
+
+    // Define global callback for reCAPTCHA
+    window.onRecaptchaSuccess = () => setCaptchaVerified(true);
+    window.onRecaptchaExpired = () => setCaptchaVerified(false);
+
+    const renderCaptcha = () => {
+      if (recaptchaRef.current && window.grecaptcha && window.grecaptcha.render) {
+        // Clear any previous widget
+        recaptchaRef.current.innerHTML = '';
+        try {
+          window.grecaptcha.render(recaptchaRef.current, {
+            sitekey: RECAPTCHA_SITE_KEY,
+            theme: 'dark',
+            callback: 'onRecaptchaSuccess',
+            'expired-callback': 'onRecaptchaExpired',
+          });
+        } catch (e) {
+          // widget may already be rendered
+        }
+      }
+    };
+
+    // Check if script is already loaded
+    if (window.grecaptcha && window.grecaptcha.render) {
+      // Small delay to wait for the DOM ref to mount
+      setTimeout(renderCaptcha, 100);
+    } else {
+      // Load reCAPTCHA script
+      const existing = document.querySelector('script[src*="recaptcha"]');
+      if (!existing) {
+        const script = document.createElement('script');
+        script.src = 'https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit';
+        script.async = true;
+        script.defer = true;
+        window.onRecaptchaLoad = renderCaptcha;
+        document.head.appendChild(script);
+      } else {
+        setTimeout(renderCaptcha, 300);
+      }
+    }
+
+    return () => {
+      // Cleanup global callbacks
+      delete window.onRecaptchaSuccess;
+      delete window.onRecaptchaExpired;
+    };
+  }, [showSignUp]);
+
   //scroll fade hook for the feature cards and steps
   const pageRef = useScrollFade({ threshold: 0.1 });
 
@@ -121,10 +183,50 @@ export default function PlatformPage() {
             </nav>
           </div>
           <div className="topbar-right">
+            <button className="topbar-signup-btn" onClick={() => setShowSignUp(true)}>Sign Up</button>
             <a href="#" className="topbar-btn">Open Dashboard</a>
           </div>
         </div>
       </header>
+
+      {/* sign-up modal overlay */}
+      {showSignUp && (
+        <div className="signup-overlay" onClick={() => setShowSignUp(false)}>
+          <div className="signup-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="signup-close" onClick={() => setShowSignUp(false)} aria-label="Close">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+            <div className="signup-header">
+              <h2>Create your account</h2>
+              <p className="signup-subtitle">Start evaluating AI agents today</p>
+            </div>
+            <form className="signup-form" onSubmit={(e) => { e.preventDefault(); setShowSignUp(false); }}>
+              <div className="signup-field">
+                <label htmlFor="signup-name" className="signup-label mono">Username</label>
+                <input id="signup-name" type="text" className="signup-input" placeholder="agent_reviewer42" autoComplete="username" required />
+              </div>
+              <div className="signup-field">
+                <label htmlFor="signup-email" className="signup-label mono">Email</label>
+                <input id="signup-email" type="email" className="signup-input" placeholder="you@company.com" autoComplete="email" required />
+              </div>
+              <div className="signup-field">
+                <label htmlFor="signup-password" className="signup-label mono">Password</label>
+                <input id="signup-password" type="password" className="signup-input" placeholder="••••••••" autoComplete="new-password" required />
+              </div>
+              <div className="signup-captcha">
+                <div ref={recaptchaRef} id="recaptcha-container" />
+              </div>
+              <button type="submit" className={`signup-submit${!captchaVerified ? ' signup-submit-disabled' : ''}`} disabled={!captchaVerified}>
+                {captchaVerified ? 'Create Account' : 'Create Account'}
+              </button>
+              <p className="signup-footer-text">Already have an account? <a href="#" className="signup-link">Sign in</a></p>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/*hero with decorative grid pattern */}
       <section className="hero">
