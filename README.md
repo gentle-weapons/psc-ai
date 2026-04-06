@@ -79,9 +79,14 @@ apps/
 │   └── public/              # Static files (images, etc.)
 │
 └── platform/                # Main PSC-AI platform (in development)
-    ├── app/
-    ├── components/
-    └── public/
+    └── app/
+        ├── page.js          # Home page (/)
+        ├── layout.js        # Root layout (wraps all pages)
+        ├── globals.css      # Global styles
+        ├── consumer/
+        │   └── page.js      # Consumer tab (/consumer)
+        └── developer/
+            └── page.js      # Developer tab (/developer)
 
 turbo.json                   # Turborepo task configuration
 package.json                 # Root package.json (workspaces)
