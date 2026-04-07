@@ -4,7 +4,7 @@ import { use, useState } from "react";
 import Link from 'next/link';
 
 import { ScoreBar, MetricTile, ScoreBadge } from "../components";
-import { allReviews, developers } from "../mockData";
+import { allReviews } from "../mockData";
 
 // Returns reviews sorted by date desc, grouped so same-agent reviews are adjacent
 function groupedReviews(reviews) {

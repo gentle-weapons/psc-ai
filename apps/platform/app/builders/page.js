@@ -1,15 +1,43 @@
 "use client";
 
-import { useState } from "react";
-import { developers } from "./mockData";
+import { useState, useEffect } from "react";
+import { createClient } from "@supabase/supabase-js"
 import Link from "next/link";
 
-export default function DeveloperDirectory() {
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+);
+
+export default function BuilderDirectory() {
+  const [builders, setBuilders] = useState([]);
   const [search, setSearch] = useState("");
 
-  const filtered = developers.filter((d) =>
+useEffect(() => {
+  async function fetchBuilders() {
+    const { data, error } = await supabase.from("builders").select("*");
+
+    if (error) { 
+      console.error(error); 
+    } else {
+      setBuilders(data);
+    }
+  }
+
+  fetchBuilders()
+}, []);
+
+  const filtered = builders.filter((d) =>
     d.name.toLowerCase().includes(search.toLowerCase())
   );
+
+  const formatDate = (timestamp) => {
+    return new Date(timestamp).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
 
   return (
     <div className="h-screen bg-stone-950 text-stone-200 font-sans flex flex-col">
@@ -30,8 +58,8 @@ export default function DeveloperDirectory() {
 
           {/* Page title */}
           <div className="mb-8">
-            <h1 className="text-xl font-semibold text-stone-100 mb-1">Developers</h1>
-            <p className="text-sm text-stone-500">Browse agents built and registered by the community. Click a developer to see their agents and reviews.</p>
+            <h1 className="text-xl font-semibold text-stone-100 mb-1">Builders</h1>
+            <p className="text-sm text-stone-500">Browse agents built and registered by the community. Click a builder to see their agents and reviews.</p>
           </div>
 
           {/* Search */}
@@ -41,7 +69,7 @@ export default function DeveloperDirectory() {
             </svg>
             <input
               type="text"
-              placeholder="Search developers..."
+              placeholder="Search builders..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full bg-stone-900 border border-stone-700/50 rounded-lg pl-9 pr-8 py-2.5 text-sm text-stone-300 placeholder-stone-600 focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20 transition-colors"
@@ -60,7 +88,7 @@ export default function DeveloperDirectory() {
 
           {/* Result count */}
           <p className="text-xs text-stone-600 mb-4 font-mono">
-            {filtered.length} of {developers.length} developers
+            {filtered.length} of {builders.length} builders
           </p>
 
           {/* Developer list */}
@@ -69,7 +97,7 @@ export default function DeveloperDirectory() {
               <svg className="w-6 h-6 text-stone-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
               </svg>
-              <p className="text-sm text-stone-600">No developers match your search</p>
+              <p className="text-sm text-stone-600">No builders match your search</p>
               <button
                 onClick={() => setSearch("")}
                 className="text-xs text-violet-400 hover:text-violet-300 transition-colors"
@@ -99,11 +127,7 @@ export default function DeveloperDirectory() {
                       </div>
                       <p className="text-xs text-stone-500 leading-relaxed mb-2">{dev.bio}</p>
                       <div className="flex items-center gap-3">
-                        <span className="text-xs text-stone-600">
-                          {dev.agentCount} agent{dev.agentCount !== 1 ? "s" : ""}
-                        </span>
-                        <span className="text-xs text-stone-700">·</span>
-                        <span className="text-xs text-stone-600">Since {dev.joinedDate}</span>
+                        <span className="text-xs text-stone-600">Since {formatDate(dev.joined_date)}</span>
                       </div>
                     </div>
 
