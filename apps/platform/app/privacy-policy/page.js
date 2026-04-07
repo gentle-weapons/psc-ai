@@ -25,12 +25,12 @@ export default function PrivacyPolicy() {
           ReviewMyAgent
         </a>
         <ul className="flex gap-6 list-none">
-          {[{ href: "/privacy", label: "Privacy" }, { href: "/terms", label: "Terms" }].map(({ href, label }) => (
+          {[{ href: "/privacy-policy", label: "Privacy" }, { href: "/terms-of-service", label: "Terms" }].map(({ href, label }) => (
             <li key={href}>
               <a
                 href={href}
                 className={`text-[12px] font-normal tracking-widest uppercase no-underline transition-colors duration-200 ${
-                  href === "/privacy" ? "text-violet-400" : "text-[#7a8394] hover:text-violet-400"
+                  href === "/privacy-policy" ? "text-violet-400" : "text-[#7a8394] hover:text-violet-400"
                 }`}
               >
                 {label}
