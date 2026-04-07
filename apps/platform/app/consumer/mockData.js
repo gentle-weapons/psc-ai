@@ -1,3 +1,11 @@
+export const builder = {
+  name: "John Doe",
+  username: "johndoe",
+  bio: "Building open-source AI agents for research and productivity workflows.",
+  agentCount: 4,
+  joinedDate: "Jan 2026",
+};
+
 export const allReviews = [
   {
     id: 1,

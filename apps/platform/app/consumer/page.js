@@ -1,18 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { ScoreBar, MetricTile, ScoreBadge } from "./components"
-import { allReviews } from "./mockData"
 import Link from 'next/link';
 
-const ALL_FRAMEWORKS = ["All", ...Array.from(new Set(allReviews.map((r) => r.framework)))];
+import { ScoreBar, MetricTile, ScoreBadge } from "./components";
+import { allReviews, builder } from "./mockData";
 
 // Returns reviews sorted by date desc, grouped so same-agent reviews are adjacent
 function groupedReviews(reviews) {
   // Preserve agent grouping order by first appearance, sort within each group by date desc
   const order = [];
   const groups = {};
-
   reviews.forEach((r) => {
     if (!groups[r.agentName]) {
       groups[r.agentName] = [];
@@ -20,10 +18,8 @@ function groupedReviews(reviews) {
     }
     groups[r.agentName].push(r);
   });
-
   // Sort each group by date descending (already sorted in data, but enforce it)
   order.forEach((name) => groups[name].sort((a, b) => new Date(b.date) - new Date(a.date)));
-
   return order.flatMap((name) => groups[name]);
 }
 
@@ -31,14 +27,11 @@ export default function ReviewPlatform() {
   const [selected, setSelected] = useState(allReviews[0]);
   const [tab, setTab] = useState("experience");
   const [search, setSearch] = useState("");
-  const [frameworkFilter, setFrameworkFilter] = useState("All");
 
   const filtered = (() => {
-    const base = allReviews.filter((r) => {
-      const matchesSearch = r.agentName.toLowerCase().includes(search.toLowerCase());
-      const matchesFramework = frameworkFilter === "All" || r.framework === frameworkFilter;
-      return matchesSearch && matchesFramework;
-    });
+    const base = allReviews.filter((r) =>
+      r.agentName.toLowerCase().includes(search.toLowerCase())
+    );
     return groupedReviews(base);
   })();
 
@@ -57,7 +50,7 @@ export default function ReviewPlatform() {
   }
 
   return (
-    <div className="min-h-screen bg-stone-950 text-stone-200 font-sans flex flex-col">
+    <div className="h-screen bg-stone-950 text-stone-200 font-sans flex flex-col">
       {/* Header (this will be replaced with a uniform navigation bar across the entire app once built) */}
       <header className="border-b border-stone-800 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -70,8 +63,27 @@ export default function ReviewPlatform() {
         {/* Sidebar */}
         <aside className="w-72 border-r border-stone-800 flex flex-col overflow-hidden flex-shrink-0">
 
-          {/* Search + framework filter */}
-          <div className="px-3 pt-3 pb-2 border-b border-stone-800 space-y-2">
+          {/* Builder profile */}
+          <div className="px-4 pt-4 pb-3 border-b border-stone-800">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-9 h-9 rounded-lg bg-violet-500/20 border border-violet-500/30 flex items-center justify-center flex-shrink-0">
+                <span className="text-sm font-medium text-violet-300">{builder.name[0]}</span>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-stone-200">{builder.name}</p>
+                <p className="text-xs text-stone-600 font-mono">@{builder.username}</p>
+              </div>
+            </div>
+            <p className="text-xs text-stone-500 leading-relaxed mb-2">{builder.bio}</p>
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-stone-600">{builder.agentCount} agents</span>
+              <span className="text-xs text-stone-700">·</span>
+              <span className="text-xs text-stone-600">Since {builder.joinedDate}</span>
+            </div>
+          </div>
+
+          {/* Search */}
+          <div className="px-3 pt-3 pb-2 border-b border-stone-800">
             <div className="relative">
               <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-stone-500 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
@@ -91,21 +103,6 @@ export default function ReviewPlatform() {
                 </button>
               )}
             </div>
-            <div className="flex flex-wrap gap-1">
-              {ALL_FRAMEWORKS.map((fw) => (
-                <button
-                  key={fw}
-                  onClick={() => setFrameworkFilter(fw)}
-                  className={`text-xs px-2 py-0.5 rounded-full border transition-colors ${
-                    frameworkFilter === fw
-                      ? "bg-violet-500/20 border-violet-500/40 text-violet-300"
-                      : "bg-stone-900 border-stone-700/50 text-stone-500 hover:text-stone-300 hover:border-stone-600"
-                  }`}
-                >
-                  {fw}
-                </button>
-              ))}
-            </div>
           </div>
 
           {/* Result count */}
@@ -122,7 +119,7 @@ export default function ReviewPlatform() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
                 </svg>
                 <p className="text-xs text-stone-600">No reviews match your filters</p>
-                <button onClick={() => { setSearch(""); setFrameworkFilter("All"); }} className="text-xs text-violet-400 hover:text-violet-300 transition-colors">
+                <button onClick={() => setSearch("")} className="text-xs text-violet-400 hover:text-violet-300 transition-colors">
                   Clear filters
                 </button>
               </div>
@@ -193,7 +190,7 @@ export default function ReviewPlatform() {
           <div className="flex-1 overflow-y-auto px-6 py-5">
             {tab === "experience" ? (
               <div className="grid grid-cols-2 gap-6 h-full">
-                {/* Left column — rubric scores + at a glance */}
+                {/* Left column — rubric scores */}
                 <div className="space-y-6">
                   <div>
                     <p className="text-xs font-medium text-stone-500 uppercase tracking-widest mb-3">Rubric scores</p>
@@ -202,22 +199,6 @@ export default function ReviewPlatform() {
                         <div key={key} className="grid grid-cols-[120px_1fr] items-center gap-3">
                           <span className="text-sm text-stone-400">{label}</span>
                           <ScoreBar value={selected.experience[key]} />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <p className="text-xs font-medium text-stone-500 uppercase tracking-widest mb-3">At a glance</p>
-                    <div className="flex gap-2 flex-wrap">
-                      {[
-                        { label: "Latency", value: `${(selected.metrics.latencyMs / 1000).toFixed(2)}s` },
-                        { label: "Tool calls", value: selected.metrics.toolCalls },
-                        { label: "Errors", value: selected.metrics.errors, danger: selected.metrics.errors > 0 },
-                      ].map(({ label, value, danger }) => (
-                        <div key={label} className="bg-stone-900 border border-stone-700/50 rounded-lg px-3 py-2 flex items-center gap-2">
-                          <span className="text-xs text-stone-500">{label}</span>
-                          <span className={`text-sm font-mono ${danger ? "text-rose-400" : "text-stone-300"}`}>{value}</span>
                         </div>
                       ))}
                     </div>
