@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { use, useState } from "react";
 import Link from 'next/link';
 
-import { ScoreBar, MetricTile, ScoreBadge } from "./components";
-import { allReviews, builder } from "./mockData";
+import { ScoreBar, MetricTile, ScoreBadge } from "../components";
+import { allReviews, developers } from "../mockData";
 
 // Returns reviews sorted by date desc, grouped so same-agent reviews are adjacent
 function groupedReviews(reviews) {
@@ -23,13 +23,17 @@ function groupedReviews(reviews) {
   return order.flatMap((name) => groups[name]);
 }
 
-export default function ReviewPlatform() {
+export default function ReviewPlatform({ params }) {
   const [selected, setSelected] = useState(allReviews[0]);
   const [tab, setTab] = useState("experience");
   const [search, setSearch] = useState("");
 
+  const { username } = use(params);
+  const builder = developers.find((d) => d.username === username);
+  const builderReviews = allReviews.filter(r => r.builderUsername === builder.username);
+
   const filtered = (() => {
-    const base = allReviews.filter((r) =>
+    const base = builderReviews.filter((r) =>
       r.agentName.toLowerCase().includes(search.toLowerCase())
     );
     return groupedReviews(base);
@@ -76,7 +80,7 @@ export default function ReviewPlatform() {
             </div>
             <p className="text-xs text-stone-500 leading-relaxed mb-2">{builder.bio}</p>
             <div className="flex items-center gap-3">
-              <span className="text-xs text-stone-600">{builder.agentCount} agents</span>
+              <span className="text-xs text-stone-600">{builder.agentCount} Agents</span>
               <span className="text-xs text-stone-700">·</span>
               <span className="text-xs text-stone-600">Since {builder.joinedDate}</span>
             </div>
