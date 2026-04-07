@@ -171,8 +171,6 @@ export default function TermsOfService() {
         </main>
       </div>
 
-      <Footer />
-
       <style>{`
         @keyframes fadeUp {
           from { opacity: 0; transform: translateY(16px); }
