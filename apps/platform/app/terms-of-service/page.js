@@ -12,10 +12,9 @@ const tocItems = [
   { id: "s9",  label: "Intellectual Property" },
   { id: "s10", label: "Disclaimer of Warranties" },
   { id: "s11", label: "Limitation of Liability" },
-  { id: "s12", label: "Indemnification" },
-  { id: "s13", label: "Termination" },
-  { id: "s14", label: "Changes to Terms" },
-  { id: "s15", label: "Contact" },
+  { id: "s12", label: "Termination" },
+  { id: "s13", label: "Changes to Terms" },
+  { id: "s14", label: "Contact" },
 ];
 
 function Callout({ children }) {
@@ -38,7 +37,7 @@ export default function PlatformTermsPage() {
           ReviewMyAgent
         </a>
         <ul className="flex gap-6 list-none">
-          {[{ href: "/privacy-policy", label: "Privacy" }, { href: "/terms-of-service", label: "Terms" }].map(({ href, label }) => (
+          {[{ href: "/privacy-policy", label: "Privacy Policy" }, { href: "/terms-of-service", label: "Terms of Service" }].map(({ href, label }) => (
             <li key={href}>
               <a
                 href={href}
@@ -252,20 +251,7 @@ export default function PlatformTermsPage() {
               </Callout>
             </DocSection>
 
-            <DocSection id="s12" num="12" title="Indemnification">
-              <BodyText>
-                You agree to indemnify and hold harmless Gentle Systems and its team members from
-                any claims, damages, losses, or expenses (including reasonable legal fees) arising
-                from:
-              </BodyText>
-              <BulletList items={[
-                "Your use of the platform in violation of these Terms",
-                "Your submission of agent trace data that infringes on third-party rights or violates applicable law",
-                "Any content or data you submit to the platform",
-              ]} />
-            </DocSection>
-
-            <DocSection id="s13" num="13" title="Termination">
+            <DocSection id="s12" num="12" title="Termination">
               <BodyText>
                 You may delete your account at any time through your account settings. Upon deletion,
                 we will remove your personal information within 30 days in accordance with our
@@ -282,7 +268,7 @@ export default function PlatformTermsPage() {
               </BodyText>
             </DocSection>
 
-            <DocSection id="s14" num="14" title="Changes to These Terms">
+            <DocSection id="s13" num="13" title="Changes to These Terms">
               <BodyText>
                 We may update these Terms as the platform evolves. For material changes, we will
                 notify you via email or a prominent notice within the platform at least 14 days
@@ -295,7 +281,7 @@ export default function PlatformTermsPage() {
               </BodyText>
             </DocSection>
 
-            <DocSection id="s15" num="15" title="Contact">
+            <DocSection id="s14" num="14" title="Contact">
               <BodyText>
                 For questions or concerns about these Terms:
               </BodyText>
