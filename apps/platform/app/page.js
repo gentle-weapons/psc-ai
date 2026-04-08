@@ -1,30 +1,47 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { supabase } from './lib/supabaseClient';
 import useScrollFade from './hooks/useScrollFade';
 
 export default function PlatformPage() {
+  //auth variable for page
+  const [user, setUser] = useState(null);
   const [showSignUp, setShowSignUp] = useState(false);
+  const [showSignIn, setShowSignIn] = useState(false);
+  const [authError, setAuthError] = useState('');
+  const [authLoading, setAuthLoading] = useState(false);
   const [captchaVerified, setCaptchaVerified] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const recaptchaRef = useRef(null);
 
-  // Google reCAPTCHA test site key (always passes in dev)
+  //recaptcha test key from google
   const RECAPTCHA_SITE_KEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
 
-  // Load reCAPTCHA script and render widget when modal opens
+  //check if user login when page start
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  //load recaptcha script when modal open
   useEffect(() => {
     if (!showSignUp) {
       setCaptchaVerified(false);
       return;
     }
 
-    // Define global callback for reCAPTCHA
     window.onRecaptchaSuccess = () => setCaptchaVerified(true);
     window.onRecaptchaExpired = () => setCaptchaVerified(false);
 
     const renderCaptcha = () => {
       if (recaptchaRef.current && window.grecaptcha && window.grecaptcha.render) {
-        // Clear any previous widget
+        //clear old widget away
         recaptchaRef.current.innerHTML = '';
         try {
           window.grecaptcha.render(recaptchaRef.current, {
@@ -34,17 +51,17 @@ export default function PlatformPage() {
             'expired-callback': 'onRecaptchaExpired',
           });
         } catch (e) {
-          // widget may already be rendered
+          //widget maybe render already
         }
       }
     };
 
-    // Check if script is already loaded
+    //check if script load already
     if (window.grecaptcha && window.grecaptcha.render) {
-      // Small delay to wait for the DOM ref to mount
+      //wait small time for dom
       setTimeout(renderCaptcha, 100);
     } else {
-      // Load reCAPTCHA script
+      //load script for recaptcha
       const existing = document.querySelector('script[src*="recaptcha"]');
       if (!existing) {
         const script = document.createElement('script');
@@ -59,16 +76,98 @@ export default function PlatformPage() {
     }
 
     return () => {
-      // Cleanup global callbacks
+      //delete global callback
       delete window.onRecaptchaSuccess;
       delete window.onRecaptchaExpired;
     };
   }, [showSignUp]);
 
-  //scroll fade hook for the feature cards and steps
+  //function for sign up
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    setAuthError('');
+    setAuthLoading(true);
+    const username = e.target.querySelector('#signup-name').value;
+    const email = e.target.querySelector('#signup-email').value;
+    const password = e.target.querySelector('#signup-password').value;
+    const confirmPassword = e.target.querySelector('#signup-confirm-password').value;
+
+    if (password !== confirmPassword) {
+      setAuthError('Passwords do not match.');
+      setAuthLoading(false);
+      return;
+    }
+
+    const { data, error } = await supabase.auth.signUp({ email, password });
+    if (error) {
+      setAuthError(error.message);
+      setAuthLoading(false);
+      return;
+    }
+    //save username and email in profile
+    if (data.user) {
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .insert({ id: data.user.id, username, email });
+      if (profileError && !profileError.message.includes('duplicate')) {
+        setAuthError(profileError.message);
+        setAuthLoading(false);
+        return;
+      }
+    }
+    setAuthLoading(false);
+    setShowSignUp(false);
+  };
+
+  //function for sign in
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+    setAuthError('');
+    setAuthLoading(true);
+    const identifier = e.target.querySelector('#signin-identifier').value.trim();
+    const password = e.target.querySelector('#signin-password').value;
+
+    let loginEmail = identifier;
+
+    //if identifier doesn't contain '@', assume it's a username and fetch the mapped email
+    if (!identifier.includes('@')) {
+      const { data: profile, error: profileErr } = await supabase
+        .from('profiles')
+        .select('email')
+        .eq('username', identifier)
+        .single();
+
+      if (profileErr || !profile) {
+        setAuthError('Username not found');
+        setAuthLoading(false);
+        return;
+      }
+      loginEmail = profile.email;
+    }
+
+    const { error } = await supabase.auth.signInWithPassword({ email: loginEmail, password });
+    if (error) {
+      setAuthError(error.message);
+      setAuthLoading(false);
+      return;
+    }
+    setAuthLoading(false);
+    setShowSignIn(false);
+  };
+
+  //function for log out
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+  };
+
+  const openSignUp = () => { setAuthError(''); setShowSignIn(false); setShowSignUp(true); setShowPassword(false); };
+  const openSignIn = () => { setAuthError(''); setShowSignUp(false); setShowSignIn(true); setShowPassword(false); };
+
+  //scroll fade effect for card
   const pageRef = useScrollFade({ threshold: 0.1 });
 
-  //frameworks we support
+  //framework we use
   const frameworks = [
     { name: "LangChain", color: "#1AA260" },
     { name: "CrewAI", color: "#7C3AED" },
@@ -76,7 +175,7 @@ export default function PlatformPage() {
     { name: "OpenAI Swarm", color: "#F59E0B" },
   ];
 
-  //main platform features
+  //main feature of platform
   const features = [
     {
       title: "Review & Rate Agents",
@@ -100,7 +199,7 @@ export default function PlatformPage() {
     },
   ];
 
-  //how the platform works
+  //how platform working
   const steps = [
     { num: 1, title: "Connect Your Agent" },
     { num: 2, title: "Collect Feedback & Data" },
@@ -183,8 +282,15 @@ export default function PlatformPage() {
             </nav>
           </div>
           <div className="topbar-right">
-            <button className="topbar-signup-btn" onClick={() => setShowSignUp(true)}>Sign Up</button>
-            <a href="#" className="topbar-btn">Open Dashboard</a>
+            {user ? (
+              <button className="topbar-logout-btn" onClick={handleLogout}>Log Out</button>
+            ) : (
+              <>
+                <button className="topbar-signup-btn" onClick={openSignUp}>Sign Up</button>
+                <button className="topbar-signup-btn" onClick={openSignIn}>Sign In</button>
+              </>
+            )}
+            <a href="#who-its-for" className="topbar-btn">Dashboard</a>
           </div>
         </div>
       </header>
@@ -203,7 +309,8 @@ export default function PlatformPage() {
               <h2>Create your account</h2>
               <p className="signup-subtitle">Start evaluating AI agents today</p>
             </div>
-            <form className="signup-form" onSubmit={(e) => { e.preventDefault(); setShowSignUp(false); }}>
+            {authError && <div className="auth-error">{authError}</div>}
+            <form className="signup-form" onSubmit={handleSignUp}>
               <div className="signup-field">
                 <label htmlFor="signup-name" className="signup-label mono">Username</label>
                 <input id="signup-name" type="text" className="signup-input" placeholder="agent_reviewer42" autoComplete="username" required />
@@ -214,15 +321,60 @@ export default function PlatformPage() {
               </div>
               <div className="signup-field">
                 <label htmlFor="signup-password" className="signup-label mono">Password</label>
-                <input id="signup-password" type="password" className="signup-input" placeholder="••••••••" autoComplete="new-password" required />
+                <input id="signup-password" type={showPassword ? "text" : "password"} className="signup-input" placeholder="••••••••" autoComplete="new-password" required />
+              </div>
+              <div className="signup-field">
+                <label htmlFor="signup-confirm-password" className="signup-label mono">Confirm Password</label>
+                <input id="signup-confirm-password" type={showPassword ? "text" : "password"} className="signup-input" placeholder="••••••••" autoComplete="new-password" required />
+              </div>
+              <div className="signup-field" style={{ flexDirection: 'row', alignItems: 'center', marginTop: '-10px', marginBottom: '16px' }}>
+                <input id="show-signup-password" type="checkbox" checked={showPassword} onChange={(e) => setShowPassword(e.target.checked)} style={{ cursor: 'pointer' }} />
+                <label htmlFor="show-signup-password" style={{ marginLeft: '8px', fontSize: '13px', color: 'var(--text-dim)', cursor: 'pointer' }}>Show password</label>
               </div>
               <div className="signup-captcha">
                 <div ref={recaptchaRef} id="recaptcha-container" />
               </div>
-              <button type="submit" className={`signup-submit${!captchaVerified ? ' signup-submit-disabled' : ''}`} disabled={!captchaVerified}>
-                {captchaVerified ? 'Create Account' : 'Create Account'}
+              <button type="submit" className={`signup-submit${!captchaVerified || authLoading ? ' signup-submit-disabled' : ''}`} disabled={!captchaVerified || authLoading}>
+                {authLoading ? 'Creating account...' : 'Create Account'}
               </button>
-              <p className="signup-footer-text">Already have an account? <a href="#" className="signup-link">Sign in</a></p>
+              <p className="signup-footer-text">Already have an account? <a href="#" className="signup-link" onClick={(e) => { e.preventDefault(); openSignIn(); }}>Sign in</a></p>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* sign-in modal overlay */}
+      {showSignIn && (
+        <div className="signup-overlay" onClick={() => setShowSignIn(false)}>
+          <div className="signup-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="signup-close" onClick={() => setShowSignIn(false)} aria-label="Close">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+            <div className="signup-header">
+              <h2>Welcome back</h2>
+              <p className="signup-subtitle">Sign in to your account</p>
+            </div>
+            {authError && <div className="auth-error">{authError}</div>}
+            <form className="signup-form" onSubmit={handleSignIn}>
+              <div className="signup-field">
+                <label htmlFor="signin-identifier" className="signup-label mono">Email or Username</label>
+                <input id="signin-identifier" type="text" className="signup-input" placeholder="Enter email or username" autoComplete="username" required />
+              </div>
+              <div className="signup-field">
+                <label htmlFor="signin-password" className="signup-label mono">Password</label>
+                <input id="signin-password" type={showPassword ? "text" : "password"} className="signup-input" placeholder="••••••••" autoComplete="current-password" required />
+              </div>
+              <div className="signup-field" style={{ flexDirection: 'row', alignItems: 'center', marginTop: '-10px', marginBottom: '16px' }}>
+                <input id="show-signin-password" type="checkbox" checked={showPassword} onChange={(e) => setShowPassword(e.target.checked)} style={{ cursor: 'pointer' }} />
+                <label htmlFor="show-signin-password" style={{ marginLeft: '8px', fontSize: '13px', color: 'var(--text-dim)', cursor: 'pointer' }}>Show password</label>
+              </div>
+              <button type="submit" className={`signup-submit${authLoading ? ' signup-submit-disabled' : ''}`} disabled={authLoading}>
+                {authLoading ? 'Signing in...' : 'Sign In'}
+              </button>
+              <p className="signup-footer-text">Don't have an account? <a href="#" className="signup-link" onClick={(e) => { e.preventDefault(); openSignUp(); }}>Sign up</a></p>
             </form>
           </div>
         </div>
@@ -360,7 +512,7 @@ export default function PlatformPage() {
                 <li>See how others rate the same agents</li>
                 <li>Track your review history</li>
               </ul>
-              <a href="#" className="audience-btn audience-btn-user">Go to User Dashboard →</a>
+              <a href="/consumer" className="audience-btn audience-btn-user">Go to User Dashboard →</a>
             </div>
 
             {/*developers card */}
@@ -380,7 +532,7 @@ export default function PlatformPage() {
                 <li>Track cost, latency, and error rates</li>
                 <li>Compare agent versions over time</li>
               </ul>
-              <a href="#" className="audience-btn audience-btn-dev">Go to Developer Dashboard →</a>
+              <a href="/developer" className="audience-btn audience-btn-dev">Go to Developer Dashboard →</a>
             </div>
           </div>
         </div>
