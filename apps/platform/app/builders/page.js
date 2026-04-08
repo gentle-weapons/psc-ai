@@ -13,22 +13,24 @@ export default function BuilderDirectory() {
   const [builders, setBuilders] = useState([]);
   const [search, setSearch] = useState("");
 
-useEffect(() => {
-  async function fetchBuilders() {
-    const { data, error } = await supabase.from("builders").select("*");
+  useEffect(() => {
+    async function fetchBuilders() {
+      // If the SELECT command is successful, returns and stores the entire `builders`
+      // table into the data constant, as an array of objects (each representing a row).
+      const { data, error } = await supabase.from("builders").select("*");
 
-    if (error) { 
-      console.error(error); 
-    } else {
-      setBuilders(data);
+      if (error) { 
+        console.error(error); 
+      } else {
+        setBuilders(data);
+      }
     }
-  }
 
-  fetchBuilders()
-}, []);
+    fetchBuilders()
+  }, []);
 
   const filtered = builders.filter((d) =>
-    d.name.toLowerCase().includes(search.toLowerCase())
+    d.builder_name.toLowerCase().includes(search.toLowerCase())
   );
 
   const formatDate = (timestamp) => {
@@ -47,9 +49,8 @@ useEffect(() => {
           <div className="w-6 h-6 rounded bg-violet-500/20 border border-violet-500/40 flex items-center justify-center">
             <div className="w-2 h-2 rounded-full bg-violet-400" />
           </div>
-          <span className="text-sm font-medium tracking-wide text-stone-300">AgentReview</span>
+          <span className="text-sm font-medium tracking-wide text-stone-300">ReviewMyAgent</span>
         </div>
-        <span className="text-xs text-stone-600 font-mono">consumer view</span>
       </header>
 
       {/* Page content */}
@@ -109,20 +110,20 @@ useEffect(() => {
             <div className="space-y-2">
               {filtered.map((dev) => (
                 <Link
-                  key={dev.id}
+                  key={dev.username}
                   href={`/builders/${dev.username}`}
                   className="block bg-stone-900 border border-stone-700/50 rounded-lg px-4 py-4 hover:border-stone-600 hover:bg-stone-800/60 transition-all group"
                 >
                   <div className="flex items-start gap-4">
                     {/* Avatar */}
                     <div className="w-10 h-10 rounded-lg bg-violet-500/20 border border-violet-500/30 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-sm font-medium text-violet-300">{dev.name[0]}</span>
+                      <span className="text-sm font-medium text-violet-300">{dev.builder_name[0]}</span>
                     </div>
 
                     {/* Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-0.5">
-                        <span className="text-sm font-medium text-stone-200">{dev.name}</span>
+                        <span className="text-sm font-medium text-stone-200">{dev.builder_name}</span>
                         <span className="text-xs text-stone-600 font-mono">@{dev.username}</span>
                       </div>
                       <p className="text-xs text-stone-500 leading-relaxed mb-2">{dev.bio}</p>
