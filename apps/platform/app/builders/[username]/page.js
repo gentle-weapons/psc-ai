@@ -24,13 +24,12 @@ function groupedReviews(reviews) {
 }
 
 export default function ReviewPlatform({ params }) {
+  const { username } = use(params);
   const [selected, setSelected] = useState(allReviews[0]);
   const [tab, setTab] = useState("experience");
   const [search, setSearch] = useState("");
 
-  const { username } = use(params);
-  const builder = developers.find((d) => d.username === username);
-  const builderReviews = allReviews.filter(r => r.builderUsername === builder.username);
+  const builderReviews = allReviews.filter(r => r.builderUsername === username);
 
   const filtered = (() => {
     const base = builderReviews.filter((r) =>
@@ -71,18 +70,18 @@ export default function ReviewPlatform({ params }) {
           <div className="px-4 pt-4 pb-3 border-b border-stone-800">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-9 h-9 rounded-lg bg-violet-500/20 border border-violet-500/30 flex items-center justify-center flex-shrink-0">
-                <span className="text-sm font-medium text-violet-300">{builder.name[0]}</span>
+                <span className="text-sm font-medium text-violet-300">?</span>
               </div>
               <div>
-                <p className="text-sm font-medium text-stone-200">{builder.name}</p>
-                <p className="text-xs text-stone-600 font-mono">@{builder.username}</p>
+                <p className="text-sm font-medium text-stone-200">Builder's Name</p>
+                <p className="text-xs text-stone-600 font-mono">@{username}</p>
               </div>
             </div>
-            <p className="text-xs text-stone-500 leading-relaxed mb-2">{builder.bio}</p>
+            <p className="text-xs text-stone-500 leading-relaxed mb-2">Builder's Bio</p>
             <div className="flex items-center gap-3">
-              <span className="text-xs text-stone-600">{builder.agentCount} Agents</span>
+              <span className="text-xs text-stone-600">? Agents</span>
               <span className="text-xs text-stone-700">·</span>
-              <span className="text-xs text-stone-600">Since {builder.joinedDate}</span>
+              <span className="text-xs text-stone-600">Since Jan 1, 2026</span>
             </div>
           </div>
 
