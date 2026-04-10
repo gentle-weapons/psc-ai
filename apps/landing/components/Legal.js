@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export function NavigationBar() {
   return (
-    <nav className="w-full border-b border-gray-200 bg-white">
+    <nav className="w-full border-b border-[#222222] bg-white">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         <div className="flex h-14 items-center justify-between flex-wrap gap-y-2">
 
