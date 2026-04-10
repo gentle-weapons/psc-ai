@@ -17,8 +17,8 @@ export default function LandingPage() {
 
   // Role options displayed in the "Stay in the loop" signup section
   const roleOptions = [
-    { label: 'User / Business', value: 'user' },
-    { label: 'Developer / Builder', value: 'developer' },
+    { label: 'Agent User', value: 'user' },
+    { label: 'Agent Builder', value: 'developer' },
     { label: 'Both', value: 'both' },
   ];
 
@@ -111,7 +111,7 @@ export default function LandingPage() {
           <div style={{ textAlign: 'center', maxWidth: '620px', margin: '0 auto' }}>
             <div className="section-eyebrow">Two perspectives, one platform</div>
             <div className="section-title">
-              Built for the people who use agents,<br />and the people who build them
+              Built for the people who use agents, and the people who build them
             </div>
           </div>
           <div className="audience-split">
@@ -142,7 +142,7 @@ export default function LandingPage() {
           <div style={{ textAlign: 'center', maxWidth: '620px', margin: '0 auto 56px' }}>
             <div className="section-eyebrow">Why ReviewMyAgent?</div>
             <div className="section-title">
-              Because agents deserve the same<br />accountability as any teammate
+              Because agents deserve the same accountability as any teammate
             </div>
             <p className="why-subtitle">
               AI agents are making real decisions in real workflows. Yet there's no
