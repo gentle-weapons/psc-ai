@@ -1,20 +1,28 @@
-import styles from "@/components/NavigationBar.module.css"
 import Link from 'next/link';
 
 export function NavigationBar() {
-    return (
-        <nav>
-            <div className="container">
-                <div className={styles.navInner}>
-                    <Link href="/" className={styles.logo}>ReviewMyAgent</Link>
-                    <div className={styles.navLinks}>
-                        <Link href="/privacy" className={styles.navLink}>Privacy Policy</Link>
-                        <Link href="/terms" className={styles.navLink}>Terms of Service</Link>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    );
+  return (
+    <nav className="w-full border-b border-gray-200 bg-white">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6">
+        <div className="flex h-14 items-center justify-between flex-wrap gap-y-2">
+
+          <Link href="/" className="font-semibold text-white hover:text-gray-300 transition-colors">
+            ReviewMyAgent
+          </Link>
+
+          <div className="flex items-center gap-4 sm:gap-6">
+            <Link href="/privacy" className="text-sm text-gray-400 hover:text-gray-600 transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="text-sm text-gray-400 hover:text-gray-600 transition-colors">
+              Terms of Service
+            </Link>
+          </div>
+
+        </div>
+      </div>
+    </nav>
+  );
 }
 
 export function BulletList({ items }) {

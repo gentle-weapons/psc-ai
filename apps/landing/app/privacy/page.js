@@ -1,7 +1,6 @@
 "use client";
 
-import { NavigationBar, BulletList, ContactCard, DocSection, BodyText } from "@/components/LegalComponents"
-import Footer from "@/components/Footer"
+import { NavigationBar, BulletList, ContactCard, DocSection, BodyText } from "@/components/Legal"
 
 const tocItems = [
   { id: "s1", label: "Information We Collect" },
