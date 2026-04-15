@@ -33,6 +33,7 @@ export async function submitEmailAction(email, role, captchaToken) {
     // Insert into Supabase
     try {
         const { error } = await supabase
+            .schema("landing")
             .from("emails")
             .insert([{ email, role }]);
 
