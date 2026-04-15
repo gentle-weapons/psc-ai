@@ -1,7 +1,6 @@
 "use client";
 
-import { NavigationBar, BulletList, ContactCard, DocSection, BodyText } from "@/components/LegalComponents"
-import Footer from "@/components/Footer"
+import { NavigationBar, BulletList, ContactCard, DocSection, BodyText } from "@/components/Legal"
 
 const tocItems = [
   { id: "s1", label: "Information We Collect" },
@@ -113,8 +112,8 @@ export default function PrivacyPolicy() {
               ]} />
               <BodyText>
                 To exercise any of these rights, please contact us at{" "}
-                <a href="mailto:pscagent78@gmail.com" className="text-violet-400 hover:underline">
-                  pscagent78@gmail.com
+                <a href="mailto:contact@reviewmyagent.today" className="text-violet-400 hover:underline">
+                  contact@reviewmyagent.today
                 </a>
                 . We will respond within 30 days.
               </BodyText>
@@ -148,8 +147,6 @@ export default function PrivacyPolicy() {
           </div>
         </main>
       </div>
-
-      <Footer />
 
       <style>{`
         @keyframes fadeUp {

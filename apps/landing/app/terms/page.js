@@ -1,7 +1,6 @@
 "use client";
 
-import { NavigationBar, BulletList, ContactCard, DocSection, BodyText, Callout } from "@/components/LegalComponents"
-import Footer from "@/components/Footer"
+import { NavigationBar, BulletList, ContactCard, DocSection, BodyText, Callout } from "@/components/Legal"
 
 const tocItems = [
   { id: "s1",  label: "About the Waitlist" },
@@ -170,8 +169,6 @@ export default function TermsOfService() {
           </div>
         </main>
       </div>
-
-      <Footer />
 
       <style>{`
         @keyframes fadeUp {
