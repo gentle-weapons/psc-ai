@@ -15,12 +15,15 @@ export default function FeedbackForm({ signupEmail }) {
   async function handleSubmit() {
     if (!feedback.trim()) return;
 
-    const { error } = await supabase.from("feedback").insert([{
-      category: selectedCategory,
-      content: feedback,
-      email: feedbackEmail || null,
-      created_at: new Date().toISOString(),
-    }]);
+    const { error } = await supabase
+      .schema("landing")
+      .from("feedback")
+      .insert([{
+        category: selectedCategory,
+        content: feedback,
+        email: feedbackEmail || null,
+        created_at: new Date().toISOString(),
+      }]);
 
     if (error) {
       console.error("Error submitting feedback:", error.message);
