@@ -15,9 +15,10 @@ export default function BuilderDirectory() {
 
   useEffect(() => {
     async function fetchBuilders() {
-      // If the SELECT command is successful, returns and stores the entire `builders`
-      // table into the data constant, as an array of objects (each representing a row).
-      const { data, error } = await supabase.from("builders").select("*");
+      // This query only returns the profiles that have registered agents.
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*, agents!inner(id)");
 
       if (error) { 
         console.error(error); 
@@ -30,7 +31,7 @@ export default function BuilderDirectory() {
   }, []);
 
   const filtered = builders.filter((d) =>
-    d.builder_name.toLowerCase().includes(search.toLowerCase())
+    d.username.toLowerCase().includes(search.toLowerCase())
   );
 
   const formatDate = (timestamp) => {
@@ -59,7 +60,7 @@ export default function BuilderDirectory() {
 
           {/* Page title */}
           <div className="mb-8">
-            <h1 className="text-xl font-semibold text-stone-100 mb-1">Builders</h1>
+            <h1 className="text-xl font-semibold text-stone-100 mb-1">Agent Builders</h1>
             <p className="text-sm text-stone-500">Browse agents built and registered by the community. Click a builder to see their agents and reviews.</p>
           </div>
 
@@ -117,18 +118,18 @@ export default function BuilderDirectory() {
                   <div className="flex items-start gap-4">
                     {/* Avatar */}
                     <div className="w-10 h-10 rounded-lg bg-violet-500/20 border border-violet-500/30 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-sm font-medium text-violet-300">{dev.builder_name[0]}</span>
+                      <span className="text-sm font-medium text-violet-300">{dev.username[0].toUpperCase()}</span>
                     </div>
 
                     {/* Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-0.5">
-                        <span className="text-sm font-medium text-stone-200">{dev.builder_name}</span>
+                        <span className="text-sm font-medium text-stone-200">{dev.username}</span>
                         <span className="text-xs text-stone-600 font-mono">@{dev.username}</span>
                       </div>
                       <p className="text-xs text-stone-500 leading-relaxed mb-2">{dev.bio}</p>
                       <div className="flex items-center gap-3">
-                        <span className="text-xs text-stone-600">Since {formatDate(dev.joined_date)}</span>
+                        <span className="text-xs text-stone-600">Since {formatDate(dev.created_at)}</span>
                       </div>
                     </div>
 

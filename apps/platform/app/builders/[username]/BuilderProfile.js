@@ -8,14 +8,17 @@ import { ScoreBar, MetricTile, ScoreBadge } from "../components";
 function flattenReviews(builder) {
   if (!builder?.agents) return [];
   return builder.agents.flatMap((agent) =>
-    (agent.reviews ?? []).map((review) => ({
-      ...review,
-      metrics: review.metrics?.[0] ?? null,
-      agentName: agent.name,
-      agentId: agent.id,
-      framework: agent.framework,
-      publicMetrics: agent.public_metrics,
-    }))
+    (agent.reviews ?? []).map((review) => {
+      return {
+        ...review,
+        metrics: review.metrics?.[0] ?? null,
+        reviewedBy: review.reviewer?.username ?? "Unknown",
+        agentName: agent.name,
+        agentId: agent.id,
+        framework: agent.framework,
+        publicMetrics: agent.public_metrics,
+      };
+    })
   );
 }
 
@@ -69,7 +72,6 @@ export default function BuilderProfile({ builder }) {
         <div className="flex items-center gap-3">
           <span className="text-sm font-medium tracking-wide text-stone-300">ReviewMyAgent</span>
         </div>
-        <Link href="/review" className="text-white bg-[#8B5CF6] px-4 py-2 rounded-lg">Create Review</Link>
       </header>
 
       <div className="flex flex-1 overflow-hidden" style={{ height: "calc(100vh - 57px)" }}>
@@ -81,11 +83,11 @@ export default function BuilderProfile({ builder }) {
             <div className="flex items-center gap-3 mb-2">
               <div className="w-9 h-9 rounded-lg bg-violet-500/20 border border-violet-500/30 flex items-center justify-center flex-shrink-0">
                 <span className="text-sm font-medium text-violet-300">
-                  {builder.builder_name?.[0] ?? "?"}
+                  {builder.username[0].toUpperCase() ?? "?"}
                 </span>
               </div>
               <div>
-                <p className="text-sm font-medium text-stone-200">{builder.builder_name}</p>
+                <p className="text-sm font-medium text-stone-200">{builder.username}</p>
                 <p className="text-xs text-stone-600 font-mono">@{builder.username}</p>
               </div>
             </div>
@@ -94,7 +96,7 @@ export default function BuilderProfile({ builder }) {
               <span className="text-xs text-stone-600">{builder.agents?.length ?? 0} Agents</span>
               <span className="text-xs text-stone-700">·</span>
               <span className="text-xs text-stone-600">
-                Since {new Date(builder.joined_date).toLocaleDateString("en-US", { month: "short", year: "numeric" })}
+                Since {new Date(builder.created_at).toLocaleDateString("en-US", { month: "short", year: "numeric" })}
               </span>
             </div>
           </div>
@@ -122,12 +124,6 @@ export default function BuilderProfile({ builder }) {
             </div>
           </div>
 
-          {/* Result count */}
-          <div className="px-4 py-2 border-b border-stone-800 flex items-center justify-between">
-            <p className="text-xs font-medium text-stone-500 uppercase tracking-widest">Reviews</p>
-            <span className="text-xs font-mono text-stone-600">{filtered.length} / {allReviews.length}</span>
-          </div>
-
           {/* Review list */}
           <div className="overflow-y-auto flex-1">
             {filtered.length === 0 ? (
@@ -144,22 +140,30 @@ export default function BuilderProfile({ builder }) {
               filtered.map((r, i) => (
                 <div key={r.id}>
                   {showAgentLabel(filtered, i) && (
-                    <div className={`px-4 py-1.5 flex items-center gap-2 ${i !== 0 ? "border-t border-stone-800 mt-1 pt-2.5" : ""}`}>
-                      <span className="text-xs font-medium text-stone-400">{r.agentName}</span>
-                      <span className="text-xs font-mono text-stone-700">{r.framework}</span>
+                    <div className={`px-4 py-2 flex items-center justify-between gap-2 bg-stone-800/50`}>
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-sm font-semibold text-stone-300">{r.agentName}</span>
+                        <span className="text-xs font-mono text-stone-500">{r.framework}</span>
+                      </div>
+                      <Link
+                        href={`/review?agentId=${r.agentId}&agentName=${r.agentName}`}
+                        className="text-xs font-medium text-white bg-violet-600 hover:bg-violet-500 px-2.5 py-1 rounded-md transition-colors flex-shrink-0"
+                      >
+                        + Review
+                      </Link>
                     </div>
                   )}
                   <button
                     onClick={() => { setSelected(r); setTab("experience"); }}
                     className={`w-full text-left px-4 py-3 border-b border-stone-800/40 transition-colors hover:bg-stone-900 ${
                       selected?.id === r.id
-                        ? "bg-stone-900 border-l-2 border-l-violet-500"
+                        ? "border-l-2 border-l-violet-500"
                         : "border-l-2 border-l-transparent"
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2">
                       <div>
-                        <span className="text-sm text-stone-300 truncate block">{r.reviewed_by}</span>
+                        <span className="text-sm text-stone-300 truncate block">{r.reviewedBy}</span>
                         <span className="text-xs font-mono text-stone-600">{r.date}</span>
                       </div>
                       <ScoreBadge score={r.overall_score} />
@@ -177,7 +181,7 @@ export default function BuilderProfile({ builder }) {
             <div className="px-6 py-4 border-b border-stone-800 flex items-start justify-between gap-4">
               <div>
                 <h1 className="text-lg font-semibold text-stone-100 mb-0.5">{selected.agentName}</h1>
-                <p className="text-xs text-stone-500 mb-2">Review by {selected.reviewed_by} · {selected.date}</p>
+                <p className="text-xs text-stone-500 mb-2">Review by {selected.reviewedBy} · {selected.date}</p>
                 <span className="text-xs text-stone-600 font-mono">{selected.framework}</span>
               </div>
               <div className="flex-shrink-0 text-right">
@@ -234,12 +238,14 @@ export default function BuilderProfile({ builder }) {
                     <div>
                       <p className="text-xs font-medium text-stone-500 uppercase tracking-widest mb-3">Reviewer note</p>
                       <div className="bg-stone-900 border border-stone-700/50 rounded-lg px-4 py-3">
-                        <p className="text-sm text-stone-300 leading-relaxed">{selected.reviewer_note}</p>
+                        <p className={`text-sm leading-relaxed ${selected.review_note ? "text-stone-300" : "text-stone-500 italic"}`}>
+                          {selected.review_note ?? "The reviewer did not leave a note."}
+                        </p>
                         <div className="flex items-center gap-2 mt-3 pt-3 border-t border-stone-800">
                           <div className="w-5 h-5 rounded-full bg-stone-700 flex items-center justify-center">
-                            <span className="text-xs text-stone-400">{selected.reviewed_by?.[0]}</span>
+                            <span className="text-xs text-stone-400">{selected.reviewedBy?.[0]}</span>
                           </div>
-                          <span className="text-xs text-stone-500">{selected.reviewed_by}</span>
+                          <span className="text-xs text-stone-500">{selected.reviewedBy}</span>
                           <span className="text-xs text-stone-700 ml-auto font-mono">{selected.date}</span>
                         </div>
                       </div>
