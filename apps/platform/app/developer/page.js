@@ -1,41 +1,24 @@
 // The main page for developer dashboard
 
 'use client';
- 
-import { useState } from 'react'; 
+
+import { useState } from 'react';
 import NavigationBar from '../../components/NavigationBar';
 import StatsRow from '../../components/StatsRow';
 import SearchFilters from '../../components/SearchFilters';
 import AgentList from '../../components/AgentList';
 import AgentDetail from '../../components/AgentDetail';
 
-// Placeholder data
+//placeholder stats
 const activeCount = 1;
 const firedCount = 3;
 const avgScore = 82;
 const totalReviews = 145;
 
-// Colors used
-const COLORS = {
-  green: '#00FF88',
-  amber: '#F5A623',
-  purple: '#8B5CF6',
-  blue: '#4A90E2',
-  surface: '#1a1a1a',
-  surfaceHigh: '#222222',
-  border: '#2a2a2a',
-  text: '#ffffff',
-  textMuted: '#888888',
-  textDim: '#555555',
-  red: '#FF4D4D',
-  blueMuted: '#1e3a5f',
-  greenMuted: '#1f3d2b',
-};
- 
-// Placeholder filters
+//placeholder filters
 const status = ['all', 'active', 'fired'];
 
-// Placeholder agent
+//placeholder agents
 const AGENTS = [
   {
     id: "agt-001",
@@ -70,13 +53,13 @@ const AGENTS = [
     },
   },
 ];
-  
+
 export default function DeveloperPage() {
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
- 
-  // Filter by status function
+
+  //filter agents by search and status
   const filtered = AGENTS.filter((a) => {
     const matchesSearch = a.name.toLowerCase().includes(search.toLowerCase());
     const matchesStatus = !filterStatus || filterStatus === 'all'
@@ -85,50 +68,84 @@ export default function DeveloperPage() {
     return matchesSearch && matchesStatus;
   });
   const selectedAgent = AGENTS.find((a) => a.id === selectedId) ?? null;
- 
+
   return (
-    <>
+    <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
       <NavigationBar />
-      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '24px' }}>
-        {/* Hero Section */}
-        <div className="hero">
-          <h1>Agent Performance Reviews</h1>
-          <p className="hero-subtitle">Monitor, evaluate, and manage your agents.</p>
+
+      {/* page hero */}
+      <div style={{
+        borderBottom: '1px solid var(--border)',
+        background: 'var(--bg-raised)',
+        padding: '48px 0 36px',
+      }}>
+        <div className="container">
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            background: 'var(--accent-soft)',
+            border: '1px solid rgba(139,92,246,0.2)',
+            borderRadius: 20,
+            padding: '5px 14px',
+            marginBottom: 20,
+          }}>
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)', display: 'inline-block' }} />
+            <span style={{ fontFamily: 'monospace', fontSize: 11, color: 'var(--accent)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Developer View</span>
+          </div>
+          <h1 style={{
+            fontFamily: "'Inter', sans-serif",
+            fontSize: 36,
+            fontWeight: 700,
+            letterSpacing: '-0.5px',
+            color: 'var(--text)',
+            marginBottom: 10,
+            lineHeight: 1.2,
+          }}>
+            Agent Performance Reviews
+          </h1>
+          <p style={{
+            fontSize: 15,
+            color: 'var(--text-muted)',
+            fontWeight: 300,
+            marginBottom: 32,
+          }}>
+            Monitor, evaluate, and manage your agents.
+          </p>
           <StatsRow
             activeCount={activeCount}
             firedCount={firedCount}
             avgScore={avgScore}
             totalReviews={totalReviews}
-            COLORS={COLORS}
           />
         </div>
- 
-        {/* Display Agent Section */}
+      </div>
+
+      {/* agent browser */}
+      <div className="container" style={{ padding: '32px 40px' }}>
         <div style={{
           display: 'grid',
-          gridTemplateColumns: '340px 1fr',
-          gap: 16,
+          gridTemplateColumns: '320px 1fr',
+          gap: 20,
           alignItems: 'start',
         }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <SearchFilters
               search={search}
               setSearch={setSearch}
               filterStatus={filterStatus}
               setFilterStatus={setFilterStatus}
               status={status}
-              COLORS={COLORS}
             />
             <AgentList
               filtered={filtered}
               selectedId={selectedId}
               setSelectedId={setSelectedId}
-              COLORS={COLORS}
             />
           </div>
-          <AgentDetail agent={selectedAgent} COLORS={COLORS} />
+          <AgentDetail agent={selectedAgent} />
         </div>
       </div>
-    </>
+    </div>
   );
 }
