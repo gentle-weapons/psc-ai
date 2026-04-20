@@ -7,19 +7,27 @@ import { ScoreBar, MetricTile, ScoreBadge } from "../components";
 
 function flattenReviews(builder) {
   if (!builder?.agents) return [];
-  return builder.agents.flatMap((agent) =>
-    (agent.reviews ?? []).map((review) => {
-      return {
-        ...review,
-        metrics: review.metrics?.[0] ?? null,
-        reviewedBy: review.reviewer?.username ?? "Unknown",
+  return builder.agents.flatMap((agent) => {
+    if (!agent.reviews?.length) {
+      return [{
+        id: `empty-${agent.id}`,
         agentName: agent.name,
         agentId: agent.id,
         framework: agent.framework,
         publicMetrics: agent.public_metrics,
-      };
-    })
-  );
+        isEmpty: true,
+      }];
+    }
+    return agent.reviews.map((review) => ({
+      ...review,
+      metrics: review.metrics?.[0] ?? null,
+      reviewedBy: review.reviewer?.username ?? "Unknown",
+      agentName: agent.name,
+      agentId: agent.id,
+      framework: agent.framework,
+      publicMetrics: agent.public_metrics,
+    }));
+  });
 }
 
 function groupedReviews(reviews) {
@@ -154,20 +162,28 @@ export default function BuilderProfile({ builder }) {
                     </div>
                   )}
                   <button
-                    onClick={() => { setSelected(r); setTab("experience"); }}
-                    className={`w-full text-left px-4 py-3 border-b border-stone-800/40 transition-colors hover:bg-stone-900 ${
-                      selected?.id === r.id
-                        ? "border-l-2 border-l-violet-500"
+                    onClick={() => { if (!r.isEmpty) { setSelected(r); setTab("experience"); } }}
+                    className={`w-full text-left px-4 py-3 border-b border-stone-800/40 transition-colors ${
+                      r.isEmpty
+                        ? "cursor-default"
+                        : "hover:bg-stone-900"
+                    } ${
+                      selected?.id === r.id && !r.isEmpty
+                        ? "bg-stone-900 border-l-2 border-l-violet-500"
                         : "border-l-2 border-l-transparent"
                     }`}
                   >
-                    <div className="flex items-center justify-between gap-2">
-                      <div>
-                        <span className="text-sm text-stone-300 truncate block">{r.reviewedBy}</span>
-                        <span className="text-xs font-mono text-stone-600">{r.date}</span>
+                    {r.isEmpty ? (
+                      <p className="text-xs text-stone-600 italic">No reviews yet</p>
+                    ) : (
+                      <div className="flex items-center justify-between gap-2">
+                        <div>
+                          <span className="text-sm text-stone-300 truncate block">{r.reviewedBy}</span>
+                          <span className="text-xs font-mono text-stone-600">{r.date}</span>
+                        </div>
+                        <ScoreBadge score={r.overall_score} />
                       </div>
-                      <ScoreBadge score={r.overall_score} />
-                    </div>
+                    )}
                   </button>
                 </div>
               ))
@@ -176,7 +192,7 @@ export default function BuilderProfile({ builder }) {
         </aside>
 
         {/* Detail panel */}
-        {selected && (
+        {selected && !selected.isEmpty ? (
           <main className="flex-1 flex flex-col overflow-hidden">
             <div className="px-6 py-4 border-b border-stone-800 flex items-start justify-between gap-4">
               <div>
@@ -312,6 +328,10 @@ export default function BuilderProfile({ builder }) {
                 </div>
               )}
             </div>
+          </main>
+        ): (
+          <main className="flex-1 flex items-center justify-center">
+            <p className="text-sm text-stone-600 italic">No review selected</p>
           </main>
         )}
       </div>
