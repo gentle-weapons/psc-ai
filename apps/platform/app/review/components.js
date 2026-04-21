@@ -1,5 +1,5 @@
 export function ScaleInput({ question, value, onChange }) {
-  const points = Array.from({ length: question.max - question.min + 1 }, (_, i) => i + question.min);
+  const points = [1, 2, 3, 4, 5];
 
   return (
     <div className="mt-3 flex gap-5">
@@ -27,28 +27,12 @@ export function ScaleInput({ question, value, onChange }) {
   );
 }
 
-export function DropdownInput({ question, value, onChange }) {
-  return (
-    <select
-      value={value || ""}
-      onChange={(e) => onChange(e.target.value)}
-      className="ml-4 bg-zinc-800/60 border border-zinc-700 rounded-xl px-4 py-2.5 text-sm text-zinc-200 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-zinc-500 transition-all appearance-none cursor-pointer pr-8"
-      style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: "no-repeat", backgroundPosition: "right 12px center" }}
-    >
-      <option value="" disabled className="bg-zinc-900">Select a framework…</option>
-      {question.options.map((opt) => (
-        <option key={opt} value={opt} className="bg-zinc-900">{opt}</option>
-      ))}
-    </select>
-  );
-}
-
-export function TextareaInput({ question, value, onChange, size }) {
+export function TextInput({ placeholder, value, onChange, size }) {
   return (
     <textarea
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      placeholder={question.placeholder}
+      placeholder={placeholder}
       rows={size}
       className="mt-3 w-full bg-zinc-800/60 border border-zinc-700 rounded-xl px-4 py-3 text-zinc-200 text-sm placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-zinc-500 transition-all resize-none font-light leading-relaxed"
     />

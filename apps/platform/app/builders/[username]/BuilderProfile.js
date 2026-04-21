@@ -154,7 +154,7 @@ export default function BuilderProfile({ builder }) {
                         <span className="text-xs font-mono text-stone-500">{r.framework}</span>
                       </div>
                       <Link
-                        href={`/review?agentId=${r.agentId}&agentName=${r.agentName}`}
+                        href={`/review?agent=${r.agentId}`}
                         className="text-xs font-medium text-white bg-violet-600 hover:bg-violet-500 px-2.5 py-1 rounded-md transition-colors flex-shrink-0"
                       >
                         + Review
