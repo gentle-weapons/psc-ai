@@ -334,7 +334,8 @@ export default function PlatformPage() {
                 <button className="topbar-signup-btn" onClick={openSignIn}>Sign In</button>
               </>
             )}
-            <a href="#who-its-for" className="topbar-btn">Dashboard</a>
+            <a href="/builders" className="topbar-btn">Review Hub</a>
+            <a href="/developer" className="topbar-btn">Builder Dashboard</a>
           </div>
         </div>
       </header>
