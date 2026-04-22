@@ -1,20 +1,28 @@
-import styles from "@/components/NavigationBar.module.css"
 import Link from 'next/link';
 
 export function NavigationBar() {
-    return (
-        <nav>
-            <div className="container">
-                <div className={styles.navInner}>
-                    <Link href="/" className={styles.logo}>ReviewMyAgent</Link>
-                    <div className={styles.navLinks}>
-                        <Link href="/privacy" className={styles.navLink}>Privacy Policy</Link>
-                        <Link href="/terms" className={styles.navLink}>Terms of Service</Link>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    );
+  return (
+    <nav className="w-full border-b border-[#222222] bg-white">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6">
+        <div className="flex h-14 items-center justify-between flex-wrap gap-y-2">
+
+          <Link href="/" className="font-semibold text-white hover:text-gray-300 transition-colors">
+            ReviewMyAgent
+          </Link>
+
+          <div className="flex items-center gap-4 sm:gap-6">
+            <Link href="/privacy" className="text-sm text-gray-400 hover:text-gray-600 transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="text-sm text-gray-400 hover:text-gray-600 transition-colors">
+              Terms of Service
+            </Link>
+          </div>
+
+        </div>
+      </div>
+    </nav>
+  );
 }
 
 export function BulletList({ items }) {
@@ -39,11 +47,11 @@ export function ContactCard() {
       <p className="text-[14px] font-medium text-[#e8eaed]">Gentle Systems</p>
       <p className="text-[14px] font-light text-[#7a8394]">
         Email:{" "}
-        <a href="mailto:pscagent78@gmail.com" className="text-violet-400 hover:underline">pscagent78@gmail.com</a>
+        <a href="mailto:contact@reviewmyagent.today" className="text-violet-400 hover:underline">contact@reviewmyagent.today</a>
       </p>
       <p className="text-[14px] font-light text-[#7a8394]">
         Website:{" "}
-        <a href="#" className="text-violet-400 hover:underline">reviewmyagent.today</a>
+        <a href="http://reviewmyagent.today" className="text-violet-400 hover:underline">reviewmyagent.today</a>
       </p>
     </div>
   );
