@@ -3,7 +3,10 @@
 import { ScaleInput, TextInput } from "./components"
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { supabase } from '../lib/supabaseClient';
 
+// These are only the five "scale" questions (1 - 5 input), which are passed into 
+// the ScaleInput component to dynamically create the unique scale rating.
 const questions = [
   { id: "completion", label: "Did the agent fully accomplish what you asked it to do?", pointLabels: ["Incomplete", "Partial", "Adequate", "Mostly", "Fully"] },
   { id: "helpfulness", label: "How useful was the agent's output for your actual needs?", pointLabels: ["Useless", "Limited", "Helpful", "Valuable", "Excellent"] },
@@ -16,20 +19,55 @@ export default function AgentReviewForm() {
   const searchParams = useSearchParams();
   const agent = searchParams.get("agent");
 
+  // Example of `answers` object
+  //
+  // {
+  //   task: "...",
+  //   goal_completion: 5,
+  //   helpfulness: 3,
+  //   coherence: 2,
+  //   factuality: 1,
+  //   safety: 2,
+  //   review_note: "...",
+  // }
   const [answers, setAnswers] = useState({});
-  const [submitted, setSubmitted] = useState(false);
 
+  // Variables used to determine how many questions have been answered, 
+  // and a calculation to determine the progress percentage of the form.
   const totalQuestions = questions.length + 2;
   const answered = Object.keys(answers).filter((k) => answers[k] !== "" && answers[k] !== undefined).length;
   const progress = Math.round((answered / totalQuestions) * 100);
 
-  const handleSubmit = () => {
+  const handleSubmit = async (e) => {
     if (answered === totalQuestions) {
-        setSubmitted(true);
-        // use supabase.getUser() to get current logged in user's e-mail
-        // query profiles table to match email with profile
-        // use profile ID field as review review_by field
-        // calculate overall_score as: (completion + helpfulness + coherence + factuality + safety) / 5
+      const { data: { user } } = await supabase.auth.getUser()
+      const overall_score = (answers.completion + answers.helpfulness + answers.coherence + answers.factuality + answers.safety) / 5;
+
+      const { error } = await supabase
+        .from('reviews')
+        .insert({
+          agent_id: agent,
+          task: answers.task_description,
+          overall_score: overall_score,
+          goal_completion: answers.completion,
+          helpfulness: answers.helpfulness,
+          coherence: answers.coherence,
+          factuality: answers.factuality,
+          safety: answers.safety,
+          review_note: answers.note,
+          review_by: user.id
+        })
+
+      if (error) {
+        // This should eventually be replaced with an actual UI 
+        // popup to let the user know the review failed to submit.
+        console.log(error);
+      } else {
+        // This should eventually navigate the user back 
+        // to the reviews page with their review selected
+        console.log("Successfully submitted review");
+        window.location.href = "/builders";
+      }
     }
   };
 

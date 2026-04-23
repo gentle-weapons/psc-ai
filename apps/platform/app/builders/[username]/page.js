@@ -1,11 +1,6 @@
 import BuilderProfile from "./BuilderProfile";
-import { createClient } from "@supabase/supabase-js"
+import { supabase } from '../../lib/supabaseClient';
 import { notFound } from "next/navigation";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
 
 export default async function BuilderPage({ params }) {
   const { username } = await params;
