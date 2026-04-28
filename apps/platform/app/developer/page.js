@@ -4,10 +4,10 @@
 import Link from 'next/link';
 import { supabase } from '../lib/supabaseClient';
 import { useState , useEffect } from "react";
-import { Avatar, StatCard } from "./dev-components/UI";
-import AgentCard from "./dev-components/AgentCard";
-import { fetchProfile, fetchAgents, insertAgent, updateAgent } from "./dev-components/data";
-import EditBioModal from "./dev-components/EditProfile";
+import { Avatar, StatCard } from "../../components/dev-components/UI";
+import AgentCard from "../../components/dev-components/AgentCard";
+import { fetchProfile, fetchAgents, insertAgent, updateAgent } from "../../components/dev-components/data";
+import EditBioModal from "../../components/dev-components/EditProfile";
 
 export default function BuilderDashboard() {
   const [profile, setProfile] = useState(null);

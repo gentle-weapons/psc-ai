@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "../../lib/supabaseClient";
+import { supabase } from "../../app/lib/supabaseClient";
 
 export default function EditBioModal({ currentBio, onClose, onSave }) {
   const [bio, setBio] = useState(currentBio || "");
