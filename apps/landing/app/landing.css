@@ -14,7 +14,6 @@ nav {
   position: sticky;
   top: 0;
   z-index: 100;
-  border-bottom: 1px solid var(--border);
   background: rgba(13, 13, 13, 0.9);
   backdrop-filter: blur(20px);
 }
@@ -498,7 +497,7 @@ footer {
 }
 
 /* Responsiveness */
-@media (max-width: 820px) {
+@media (max-width: 640px) {
   .audience-split, .why-grid, .loop-grid {
     grid-template-columns: 1fr;
   }
@@ -524,5 +523,9 @@ footer {
 
   .nav-links .nav-link {
     display: none;
+  }
+
+  .loop-panel {
+    min-width: 100%
   }
 }

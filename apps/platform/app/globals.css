@@ -2,24 +2,35 @@
 
 :root {
   --bg: #0D0D0D;
-  --surface: #141414;
-  --surface2: #1A1A1A;
+  --bg-raised: #141414;
+  --surface: #1A1A1A;
+  --surface2: #1F1F1F;
   --border: #222222;
-  --border-light: #2C2C2C;
+  --border-hover: #2C2C2C;
   --text: #EAE6F4;
   --text-muted: #888888;
   --text-dim: #3D3D3D;
   --accent: #8B5CF6;
-  --accent-dim: rgba(139, 92, 246, 0.09);
+  --accent-soft: rgba(139, 92, 246, 0.09);
   --accent-glow: rgba(139, 92, 246, 0.25);
-  --amber: #F5A623;
-  --amber-dim: rgba(245, 166, 35, 0.08);
   --green: #22C98A;
+  --amber: #F5A623;
   --purple: #8B5CF6;
 }
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: Roboto, Helvetica, sans-serif;
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #44403c;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #57534e;
 }

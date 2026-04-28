@@ -1,24 +1,54 @@
-// A component to display a card for an agent in the agent list.
-//
-// 'agent' - the agent object to display
-// 'selected' - boolean indicating if this agent is currently selected
-// 'onClick' - function to call when the card is clicked
+// card for a single agent in the sidebar list
 
-export default function AgentCard({ agent, selected, onClick}) {
+export default function AgentCard({ agent, selected, onClick }) {
+  const scoreColor =
+    agent.score >= 80 ? 'var(--green)' :
+    agent.score >= 60 ? 'var(--amber)' : '#FF4D4D';
+
   return (
     <div
       onClick={onClick}
       style={{
-        padding: 12,
-        border: `1px solid ${selected ? '#1f3d2b' : '#2a2a2a'}`,
-        borderRadius: 6,
-        cursor: "pointer",
-        background: selected ? '#1f3d2b' : '#1a1a1a',
+        padding: '12px 14px',
+        border: `1px solid ${selected ? 'var(--accent)' : 'var(--border)'}`,
+        borderRadius: 10,
+        cursor: 'pointer',
+        background: selected ? 'var(--accent-soft)' : 'var(--surface)',
+        transition: 'border-color 0.15s, background 0.15s',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gap: 10,
       }}
     >
-      <div style={{ fontWeight: 600 }}>{agent.name}</div>
-      <div style={{ fontSize: 12, opacity: 0.7 }}>
-        Status: {agent.status}
+      <div>
+        <div style={{
+          fontFamily: "'Inter', sans-serif",
+          fontSize: 13,
+          fontWeight: 600,
+          color: 'var(--text)',
+          marginBottom: 3,
+        }}>
+          {agent.name}
+        </div>
+        <div style={{
+          fontFamily: 'monospace',
+          fontSize: 10,
+          color: 'var(--text-muted)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.06em',
+        }}>
+          {agent.framework} · {agent.version}
+        </div>
+      </div>
+      <div style={{
+        fontFamily: "'Inter', sans-serif",
+        fontSize: 18,
+        fontWeight: 700,
+        color: scoreColor,
+        flexShrink: 0,
+      }}>
+        {agent.score}
       </div>
     </div>
   );

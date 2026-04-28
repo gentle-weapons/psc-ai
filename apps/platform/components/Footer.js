@@ -8,9 +8,9 @@ export default function Footer() {
         <span className="text-sm text-neutral-600">© 2026 Gentle Systems</span>
 
         <nav className="flex items-center gap-1">
-          <Link href="/privacy" className="text-sm text-neutral-500 hover:text-white transition-colors duration-200 px-2 py-1">Privacy Policy</Link>
+          <Link href="/privacy-policy" className="text-sm text-neutral-500 hover:text-white transition-colors duration-200 px-2 py-1">Privacy Policy</Link>
           <div className="w-px h-3.5 bg-white/15" />
-          <Link href="/terms" className="text-sm text-neutral-500 hover:text-white transition-colors duration-200 px-2 py-1">Terms of Service</Link>
+          <Link href="/terms-of-service" className="text-sm text-neutral-500 hover:text-white transition-colors duration-200 px-2 py-1">Terms of Service</Link>
         </nav>
 
       </div>
