@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 import { supabase } from './lib/supabaseClient';
 import useScrollFade from './hooks/useScrollFade';
 
+import Footer from '@/components/Footer';
+
 export default function PlatformPage() {
   //auth variable for page
   const [user, setUser] = useState(null);
@@ -334,7 +336,8 @@ export default function PlatformPage() {
                 <button className="topbar-signup-btn" onClick={openSignIn}>Sign In</button>
               </>
             )}
-            <a href="#who-its-for" className="topbar-btn">Dashboard</a>
+            <a href="/builders" className="topbar-btn">Review Hub</a>
+            <a href="/developer" className="topbar-btn">Builder Dashboard</a>
           </div>
         </div>
       </header>
@@ -618,19 +621,7 @@ export default function PlatformPage() {
         </div>
       </section>
 
-      {/*footer */}
-      <footer className="platform-footer">
-        <div className="container">
-          <div className="footer-row">
-            <a href="#" className="footer-brand">ReviewMyAgent</a>
-            <div className="footer-links">
-              <a href="#features">Features</a>
-              <a href="#how-it-works">How It Works</a>
-            </div>
-            <div className="footer-copy">© 2026 Gentle Systems</div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
