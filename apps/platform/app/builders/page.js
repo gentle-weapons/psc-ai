@@ -45,8 +45,12 @@ export default function BuilderDirectory() {
           <div className="w-6 h-6 rounded bg-violet-500/20 border border-violet-500/40 flex items-center justify-center">
             <div className="w-2 h-2 rounded-full bg-violet-400" />
           </div>
-          <span className="text-sm font-medium tracking-wide text-stone-300">ReviewMyAgent</span>
+          <Link href="/" className="text-sm font-medium tracking-wide text-stone-300 hover:text-white transition-colors">ReviewMyAgent</Link>
         </div>
+        <nav className="flex items-center gap-4">
+          <Link href="/" className="text-xs text-stone-500 hover:text-stone-300 transition-colors">Home</Link>
+          <Link href="/developer" className="text-xs text-stone-500 hover:text-stone-300 transition-colors">Developer Dashboard</Link>
+        </nav>
       </header>
 
       {/* Page content */}
