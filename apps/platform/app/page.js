@@ -336,8 +336,8 @@ export default function PlatformPage() {
                 <button className="topbar-signup-btn" onClick={openSignIn}>Sign In</button>
               </>
             )}
-            <a href="/builders" className="topbar-btn">Review Hub</a>
-            <a href="/developer" className="topbar-btn">Builder Dashboard</a>
+            <a href="/builders" className="topbar-btn">Reviewer Dashboard</a>
+            <a href="/developer" className="topbar-btn">Developer Dashboard</a>
           </div>
         </div>
       </header>
@@ -595,7 +595,7 @@ export default function PlatformPage() {
                 <li>See how others rate the same agents</li>
                 <li>Track your review history</li>
               </ul>
-              <a href="/consumer" className="audience-btn audience-btn-user">Go to User Dashboard →</a>
+              <a href="/builders" className="audience-btn audience-btn-user">Go to Reviewer Dashboard →</a>
             </div>
 
             {/*developers card */}

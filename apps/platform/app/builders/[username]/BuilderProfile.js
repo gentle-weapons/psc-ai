@@ -78,8 +78,19 @@ export default function BuilderProfile({ builder }) {
       {/* Header */}
       <header className="border-b border-stone-800 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <span className="text-sm font-medium tracking-wide text-stone-300">ReviewMyAgent</span>
+          <Link href="/builders" className="flex items-center gap-1.5 text-stone-500 hover:text-stone-300 transition-colors mr-2">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            <span className="text-xs">Builders</span>
+          </Link>
+          <span className="text-stone-700 text-xs">·</span>
+          <Link href="/" className="text-sm font-medium tracking-wide text-stone-300 hover:text-white transition-colors">ReviewMyAgent</Link>
         </div>
+        <nav className="flex items-center gap-4">
+          <Link href="/" className="text-xs text-stone-500 hover:text-stone-300 transition-colors">Home</Link>
+          <Link href="/developer" className="text-xs text-stone-500 hover:text-stone-300 transition-colors">Developer Dashboard</Link>
+        </nav>
       </header>
 
       <div className="flex flex-1 overflow-hidden" style={{ height: "calc(100vh - 57px)" }}>
