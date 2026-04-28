@@ -1,151 +1,303 @@
 // The main page for developer dashboard
+"use client";
 
-'use client';
+import Link from 'next/link';
+import { supabase } from '../lib/supabaseClient';
+import { useState , useEffect } from "react";
+import { Avatar, StatCard } from "./dev-components/UI";
+import AgentCard from "./dev-components/AgentCard";
+import { fetchProfile, fetchAgents, insertAgent, updateAgent } from "./dev-components/data";
+import EditBioModal from "./dev-components/EditProfile";
 
-import { useState } from 'react';
-import NavigationBar from '../../components/NavigationBar';
-import StatsRow from '../../components/StatsRow';
-import SearchFilters from '../../components/SearchFilters';
-import AgentList from '../../components/AgentList';
-import AgentDetail from '../../components/AgentDetail';
+export default function BuilderDashboard() {
+  const [profile, setProfile] = useState(null);
+  const [agents, setAgents] = useState([]);
+  const [filterStatus, setFilterStatus] = useState("all");
+  const [filterFramework, setFilterFramework] = useState("all");
+  const [search, setSearch] = useState(""); 
+  const [showEditBio, setShowEditBio] = useState(false);
 
-//placeholder stats
-const activeCount = 1;
-const firedCount = 3;
-const avgScore = 82;
-const totalReviews = 145;
+  // Load profile from user.id
+  useEffect(() => {
+    const load = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const [{ data: profileData }, { data: agentsData }] = await Promise.all([
+        fetchProfile(user.id),
+        fetchAgents(user.id),
+      ]);
+      setProfile(profileData);
+      setAgents(agentsData ?? []);
+    };
+    load();
+  }, []);
 
-//placeholder filters
-const status = ['all', 'active', 'fired'];
+  // Not sure how we want to handle firing agents
+  const handleFire = async (agentId) => {
+    await updateAgent(agentId, { status: "fired" });
+    setAgents((prev) =>
+      prev.map((a) => (a.id === agentId ? { ...a, status: "fired" } : a))
+    );
+  };
 
-//placeholder agents
-const AGENTS = [
-  {
-    id: "agt-001",
-    name: "TestAgent01",
-    version: "v2.3.1",
-    framework: "LangChain",
-    status: "active",
-    score: 87,
-    tags: [],
-    reviews: 142,
-    metrics: {
-      goalCompletion: 91,
-      latencyMs: 2340,
-      costPerRun: 0.043,
-      pathEfficiency: 84,
-    },
-  },
-  {
-    id: "agt-002",
-    name: "TestAgent02",
-    version: "v2.3.1",
-    framework: "LangChain",
-    status: "active",
-    score: 40,
-    tags: [],
-    reviews: 142,
-    metrics: {
-      goalCompletion: 34,
-      latencyMs: 5024,
-      costPerRun: 0.432,
-      pathEfficiency: 20,
-    },
-  },
-];
+  // Handling bio changes
+  const handleBioSave = (newBio) => {
+    setProfile((prev) => ({ ...prev, bio: newBio }));
+  };
 
-export default function DeveloperPage() {
-  const [search, setSearch] = useState('');
-  const [filterStatus, setFilterStatus] = useState(null);
-  const [selectedId, setSelectedId] = useState(null);
-
-  //filter agents by search and status
-  const filtered = AGENTS.filter((a) => {
-    const matchesSearch = a.name.toLowerCase().includes(search.toLowerCase());
-    const matchesStatus = !filterStatus || filterStatus === 'all'
-      ? true
-      : a.status === filterStatus;
-    return matchesSearch && matchesStatus;
+  // Derived state
+  const frameworks = ["all", ...new Set(agents.map((a) => a.framework))];
+  const statuses = ["all", "active", "draft", "fired"];
+  const filtered = agents.filter((a) => {
+    if (filterStatus !== "all" && a.status !== filterStatus) return false;
+    if (filterFramework !== "all" && a.framework !== filterFramework) return false;
+    if (search) {
+      const q = search.toLowerCase();
+      return (
+        a.name.toLowerCase().includes(q) ||
+        (a.description || "").toLowerCase().includes(q) ||
+        (a.tags || []).some((t) => t.includes(q))
+      );
+    }
+    return true;
   });
-  const selectedAgent = AGENTS.find((a) => a.id === selectedId) ?? null;
 
+  const activeCount = agents.filter((a) => a.status === "active").length;
+  const totalReviews = agents.reduce((s, a) => s + (a.review_count || 0), 0);
+  
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
-      <NavigationBar />
-
-      {/* page hero */}
-      <div style={{
-        borderBottom: '1px solid var(--border)',
-        background: 'var(--bg-raised)',
-        padding: '48px 0 36px',
-      }}>
-        <div className="container">
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 8,
-            background: 'var(--accent-soft)',
-            border: '1px solid rgba(139,92,246,0.2)',
-            borderRadius: 20,
-            padding: '5px 14px',
-            marginBottom: 20,
-          }}>
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)', display: 'inline-block' }} />
-            <span style={{ fontFamily: 'monospace', fontSize: 11, color: 'var(--accent)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Developer View</span>
+    <>
+      {/* Navigation Bar */}
+      <nav className="topbar">
+        <div className="topbar-box">
+          <div className="topbar-left">
+            <Link
+              href="/" className="topbar-logo">
+              <div className="logo-mark">R</div>
+              ReviewMyAgent
+            </Link>
           </div>
-          <h1 style={{
-            fontFamily: "'Inter', sans-serif",
-            fontSize: 36,
-            fontWeight: 700,
-            letterSpacing: '-0.5px',
-            color: 'var(--text)',
-            marginBottom: 10,
-            lineHeight: 1.2,
+          <div className="topbar-right">
+            <span style={{ 
+              fontSize: 12, 
+              color: "var(--text-muted)" 
+              }}>@{profile?.username}
+            </span>
+          </div>
+        </div>
+      </nav>
+
+      <main style={{ maxWidth: 1100, margin: "0 auto", padding: "80px 24px 64px" }}>
+
+        {/* Profile Header */}
+        <div
+          style={{
+            background: "var(--bg-raised)", border: "var(--border)",
+            borderRadius: 14, padding: "24px 28px", marginBottom: 24,
+            display: "flex", alignItems: "flex-start", gap: 20, flexWrap: "wrap",
           }}>
-            Agent Performance Reviews
-          </h1>
-          <p style={{
-            fontSize: 15,
-            color: 'var(--text-muted)',
-            fontWeight: 300,
-            marginBottom: 32,
-          }}>
-            Monitor, evaluate, and manage your agents.
-          </p>
-          <StatsRow
-            activeCount={activeCount}
-            firedCount={firedCount}
-            avgScore={avgScore}
-            totalReviews={totalReviews}
-          />
+        <div
+          onClick={() => setShowEditBio(true)}
+          style={{ cursor: "pointer", position: "relative" }}
+          title="Edit bio">
+          <Avatar name={profile?.username?.charAt(0).toUpperCase()}/>
+            <div style={{
+              position: "absolute",
+              inset: 0,
+              borderRadius: "50%",
+              background: "rgba(0,0,0,0.4)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              opacity: 0,
+              transition: "opacity 0.15s",
+            }}
+              onMouseEnter={(e) => e.currentTarget.style.opacity = 1}
+              onMouseLeave={(e) => e.currentTarget.style.opacity = 0}
+            >
+          <span style={{ fontSize: 11, color: "#fff", fontFamily: "Roboto, Helvetica, sans-serif", fontWeight: 500 }}>
+            Edit
+          </span>
+        </div>
+        </div>
+          <div style={{ flex: 1, minWidth: 180 }}>
+            <h1 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: "var(--text)", letterSpacing: -0.4 }}>
+              {profile?.full_name}
+            </h1>
+            <div style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 3 }}>@{profile?.username}</div>
+            {profile?.email && (
+              <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4, display: "flex", alignItems: "center", gap: 4 }}>
+                🏢 {profile?.email}
+              </div>
+            )}
+            {profile?.bio && (
+              <p style={{ margin: "10px 0 0", fontSize: 13, color: "var(--text-muted)", lineHeight: 1.55, maxWidth: 480 }}>
+                {profile?.bio}
+              </p>
+            )}
+          </div>
+          <div style={{ 
+            display: "grid", 
+            gridTemplateColumns: "repeat(2,1fr)", 
+            gap: 12, 
+            minWidth: 200
+            }}>
+              <StatCard 
+                label="Agents"    
+                value={agents.length}     
+                sub={`${activeCount} active`} 
+              />
+              <StatCard 
+              label="Reviews"   
+              value={totalReviews}      
+              sub="all time" 
+              />
+          </div>
+        </div>
+
+        {/* Agents Section */}
+        <div>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 10 }}>
+            <h2 style={{ margin: 0, fontSize: 15, fontWeight: 600, color: "var(--text)" }}>
+              Registered agents{" "}
+              <span style={{ fontSize: 12, fontWeight: 400, color: "var(--text-muted)" }}>
+                {filtered.length} of {agents.length}
+              </span>
+            </h2>
+            <button
+              style={{
+                display: "flex", alignItems: "center", gap: 5,
+                padding: "8px 14px", fontSize: 12, fontWeight: 600,
+                fontFamily: "Roboto, Helvetica, sans-serif",
+                color: "#fff", background: "var(--accent)", border: "none",
+                borderRadius: 8, cursor: "pointer",
+              }}
+            >
+              <span style={{ fontSize: 15, lineHeight: 1 }}>+</span> Register agent
+            </button>
+          </div>
+
+          {/* Filter bar */}
+          <div style={{ display: "flex", gap: 8, marginBottom: 18, flexWrap: "wrap", alignItems: "center" }}>
+            <input
+              placeholder="Search by name, description, or tag…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              style={{
+                flex: 1, minWidth: 180, padding: "7px 11px", fontSize: 12,
+                fontFamily: "Roboto, Helvetica, sans-serif", color: "var(--text)",
+                background: "var(--bg-raised)", border: "var(--border)",
+                borderRadius: 8, outline: "none",
+              }}
+            />
+            <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
+              {statuses.map((s) => (
+                <button
+                  key={s}
+                  onClick={() => setFilterStatus(s)}
+                  style={{
+                    padding: "5px 11px", fontSize: 11,
+                    fontFamily: "Roboto, Helvetica, sans-serif", fontWeight: 500,
+                    borderRadius: 7,
+                    border: `1px solid ${filterStatus === s ? "var(--accent)" : "var(--border)"}`,
+                    background: filterStatus === s ? "var(--accentDim)" : "var(--bg-raised)",
+                    color: filterStatus === s ? "var(--accent)" : "var(--text-muted)",
+                    cursor: "pointer", textTransform: "capitalize",
+                  }}
+                >
+                  {s === "all" ? "All statuses" : s}
+                </button>
+              ))}
+            </div>
+            <select
+              value={filterFramework}
+              onChange={(e) => setFilterFramework(e.target.value)}
+              style={{
+                padding: "5px 10px", fontSize: 11,
+                fontFamily: "Roboto, Helvetica, sans-serif",
+                color: "var(--text-muted)", background: "var(--bg-raised)",
+                border: "var(--border)", borderRadius: 7, cursor: "pointer", outline: "none",
+              }}
+            >
+              {frameworks.map((f) => (
+                <option key={f} value={f}>{f === "all" ? "All frameworks" : f}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Agent grid*/}
+          {filtered.length === 0 ? (
+            <div style={{
+              background: "var(--bg-raised)", 
+              border: "1.5px solidvar(--border)",
+              borderRadius: 12, 
+              padding: "44px 24px", 
+              textAlign: "center",
+              margin: "40px auto",
+            }}>
+            <div style={{ 
+              fontSize: 14, 
+              fontWeight: 600, 
+              color: "var(--text)", 
+              marginBottom: 5 
+            }}>
+              {agents.length === 0 ? "No agents yet" : "No agents match filters"}
+            </div>
+              <div style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 18, alignItems: "center" }}>
+                {agents.length === 0
+                  ? "Register your first agent to start collecting performance reviews."
+                  : "Try adjusting the search or filters."}
+              </div>
+              {agents.length === 0 && (
+                <button
+                  onClick={() => setShowAddModel(true)}
+                  style={{
+                    padding: "9px 18px", fontSize: 12, fontWeight: 600,
+                    fontFamily: "Roboto, Helvetica, sans-serif",
+                    color: "#fff", background: "var(--accent)", border: "none",
+                    borderRadius: 8, cursor: "pointer",
+                  }}
+                >
+                  Register first agent
+                </button>
+              )}
+            </div>
+          ) : (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 12 }}>
+              {filtered.map((agent) => (
+                <AgentCard
+                  key={agent.id}
+                  agent={agent}
+                  onFire={handleFire}
+                  //onViewReviews={handleViewReviews}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </main>
+      {showEditBio && (
+        <EditBioModal
+          currentBio={profile?.bio}
+          onClose={() => setShowEditBio(false)}
+          onSave={handleBioSave}
+        />
+      )}
+      {/* Footer */}
+      <footer className="platform-footer">
+      <div className="container">
+        <div className="footer-row">
+          <span className="footer-brand">ReviewMyAgent</span>
+          <div className="footer-links">
+            {/* Replace with proper links after style fix */}
+            <Link href="/">Privacy Policy</Link> 
+            <Link href="/">Terms of Service</Link>
+          </div>
+          <span className="footer-copy">© 2026 Gentle Systems</span>
         </div>
       </div>
-
-      {/* agent browser */}
-      <div className="container" style={{ padding: '32px 40px' }}>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '320px 1fr',
-          gap: 20,
-          alignItems: 'start',
-        }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <SearchFilters
-              search={search}
-              setSearch={setSearch}
-              filterStatus={filterStatus}
-              setFilterStatus={setFilterStatus}
-              status={status}
-            />
-            <AgentList
-              filtered={filtered}
-              selectedId={selectedId}
-              setSelectedId={setSelectedId}
-            />
-          </div>
-          <AgentDetail agent={selectedAgent} />
-        </div>
-      </div>
-    </div>
+    </footer>
+    </>
   );
+  
 }
